@@ -1,20 +1,18 @@
-###########################################################################################################
-# My very first ruby program, this is a 2D platform game test.						  #
-# Requires rubygems and gosu.									          #
-###########################################################################################################
-
 require 'rubygems'
 require 'gosu'
 require 'chipmunk'
+require 'RMagick'
+
 include Gosu
+
+module ZOrder
+   Background, Box = *0..1
+end
+
 
 SCREEN_WIDTH = 800
 SCREEN_HEIGHT = 600
 FULLSCREEN = false
-
-###################################
-#HELPERS
-###################################
 
 class Numeric
   def gosu_to_radians
@@ -30,20 +28,11 @@ class Numeric
   end
 end
 
-###########################################################################################################
-# GAME CLASS												  #
-###########################################################################################################
-
 class Game < Window
 
   attr_accessor :space
 
   SUBSTEPS = 10
-
-
-###########################################################################################################
-# Initialization											  #
-###########################################################################################################
 
   def initialize
     super(SCREEN_WIDTH, SCREEN_HEIGHT, false)
@@ -62,34 +51,28 @@ class Game < Window
     @sub_time = 0
 
     @level = Level.new(self,10)
-    @blocks = []
-    150.times do
-      @blocks << Block.new(self)
-    end
-
+    initialPosition = CP::Vec2.new(300,200)
+    @chasis = create_chasis(initialPosition)
+    @wheel = create_wheel(initialPosition)
+    @bigWheel = create_bigWheel(initialPosition)
+    @music = Gosu::Song.new(self, "song.ogg")
+    @music.play
+    print("======= OPEN PLANET RACER =======\n")
+    print("Song Space by MattIceMan - https://soundcloud.com/matticeman/space\n")
   end
-
-###########################################################################################################
-# Updates the game state									 	  #
-###########################################################################################################
 
   def update
 
-   # THE SUBSTEPS ENSURE THAT THE PHYSICS DOESNT MISS A STEP
     SUBSTEPS.times do
       @space.step(@dt)
     end
 
-    @scroll_x -= 5 if button_down? Button::KbLeft
-    @scroll_x += 5 if button_down? Button::KbRight
-    @scroll_y -= 5 if button_down? Button::KbUp
-    @scroll_y += 5 if button_down? Button::KbDown
+    @chasis.update
+    @wheel.update
+    @scroll_x = @chasis.position.x-SCREEN_WIDTH/2
+    @scroll_y = @chasis.position.y-SCREEN_HEIGHT/2
 
   end
-
-###########################################################################################################
-# Draws all the things on the screen									  #
-###########################################################################################################
 
   def draw
 
@@ -107,7 +90,7 @@ class Game < Window
         size = size
 
     end
-    #stars
+    
     bg_width = @stars_image.width
     bg_height = @stars_image.height
 
@@ -127,38 +110,80 @@ class Game < Window
     end
     @moon_sprite.draw(500-@scroll_x/5,100-@scroll_y/5,0)    
     @level.draw(@scroll_x,@scroll_y,SCREEN_HEIGHT,color3)
-    @blocks.each do |b|
-      b.draw(@scroll_x,@scroll_y)
-    end
+    @chasis.draw(@scroll_x,@scroll_y)
+    @wheel.draw(@scroll_x,@scroll_y)
+    @bigWheel.draw(@scroll_x,@scroll_y)
 
   end
+
+  def create_chasis(initialPosition)
+      chasis_vertices = [
+                    CP::Vec2.new(-22, -22),
+                    CP::Vec2.new(-25, -21),
+                    CP::Vec2.new(-31, -15),
+                    CP::Vec2.new(-30, 0),
+                    CP::Vec2.new(-20, 18),
+                    CP::Vec2.new(-13, 23),
+                    CP::Vec2.new(21, 23),
+                    CP::Vec2.new(21, -9),
+                    CP::Vec2.new(12, -18),
+                    CP::Vec2.new(0,-22)]
+       chasis_image = Image.new(self,"car.png",true)
+       body = CP::Body.new(1, CP::moment_for_poly(40.0, chasis_vertices, CP::Vec2.new(0, 0))) # mass, moment of inertia
+       body.p = initialPosition
+       shape = CP::Shape::Poly.new(body, chasis_vertices, CP::Vec2.new(0, 0))
+       shape.e = 0.2
+       shape.u = 0.4
+       chasis = Chasis.new(chasis_image, body)
+       @space.add_body(body)
+       @space.add_shape(shape)
+       return chasis
+  end
+
+  def create_wheel(initialPosition)
+       wheel_image = Image.new(self,"wheel.png",true)
+       body = CP::Body.new(1, CP::moment_for_circle(10.0,0.0,16,CP::Vec2.new(0, 0))) # mass, moment of inertia
+       body.p = initialPosition + CP::Vec2.new(50,40)
+       shape = CP::Shape::Circle.new(body,16, CP::Vec2.new(0, 0))
+       shape.e = 0.9
+       shape.u = 0.4
+       wheel = Wheel.new(wheel_image, body)
+       @space.add_body(body)
+       @space.add_shape(shape)
+       return wheel
+  end
+
+  def create_bigWheel(initialPosition)
+       bigWheel_image = Image.new(self,"bigWheel.png",true)
+       body = CP::Body.new(1, CP::moment_for_circle(13.0,0.0,25,CP::Vec2.new(0, 0))) # mass, moment of inertia
+       body.p = initialPosition + CP::Vec2.new(-30,40)
+       shape = CP::Shape::Circle.new(body,25, CP::Vec2.new(0, 0))
+       shape.e = 0.9
+       shape.u = 0.4
+       bigWheel = Wheel.new(bigWheel_image, body)
+       @space.add_body(body)
+       @space.add_shape(shape)
+       return bigWheel
+  end
+
 end
 
-###########################################################################################################
-# LEVEL CLASS										          #
-###########################################################################################################
-
 class Level
-
-###########################################################################################################
-# Initialization											  #
-###########################################################################################################
 
   def initialize(window,length)
     @color = Color.new(255,100,100,100)
     @window = window
-    @alturas = length.times.map{rand(100)-50}
+    @heights = length.times.map{rand(100)-50}
 
     @a = CP::Vec2.new(0,0)
     @b = CP::Vec2.new(SCREEN_WIDTH - (50 * 2), 0)
 
-    # CHIPMUNK BODY
     @body = CP::Body.new_static()
     @body.p = CP::Vec2.new(0,0)
     @body.v = CP::Vec2.new(0, 0)
 
     previous = 400
-    @alturas.each_with_index do |altura,index|
+    @heights.each_with_index do |altura,index|
 
         @shape_verts = [
                     CP::Vec2.new(200*index,600),
@@ -168,97 +193,56 @@ class Level
                        ]
 
         @shape = CP::Shape::Poly.new(@body,@shape_verts,CP::Vec2.new(0,0))
-        @shape.e = 0
-        @shape.u = 1
+        @shape.e = 0.7
+        @shape.u = 0.5
         @window.space.add_static_shape(@shape)
         previous = previous-altura
     end
   end
 
-###########################################################################################################
-# Draws character on screen										  #
-###########################################################################################################
-
   def draw(scroll_x,scroll_y,screen_height,color)
     previous = 400
-    @alturas.each_with_index do |altura,index|
-      @window.draw_quad(200*index-scroll_x,600-scroll_y,color,200*index-scroll_x,previous-scroll_y,color,200*index+200-scroll_x,previous-altura-scroll_y,color,200*index+200-scroll_x,600-scroll_y,color)
+    @heights.each_with_index do |altura,index|
+      @window.draw_quad(200*index-scroll_x,2000-scroll_y,color,200*index-scroll_x,previous-scroll_y,color,200*index+200-scroll_x,previous-altura-scroll_y,color,200*index+200-scroll_x,2000-scroll_y,color)
       previous = previous-altura
     end
   end
 
 end;
 
-########################
-#BOX
-#######################
-# These are the falling Blocks
-class Block
+class Chasis
 
-  attr_reader :shape
+   attr_accessor :position
 
-  BOX_SIZE = 10
+   def initialize(image, body)
+       @image = image
+       @body = body
+   end
 
-  def initialize(window)
-    @window = window
-    @color = Gosu::red
+   def draw(scroll_x,scroll_y)
+       @image.draw_rot(@body.p.x-scroll_x, @body.p.y-scroll_y, ZOrder::Box, @body.a.radians_to_gosu)
+   end
 
-    @body = CP::Body.new(10, 100)
-    @body.p = CP::Vec2.new(20 + rand(640 - (20 * 2)), rand(50))
-    @body.v = CP::Vec2.new(0,0)
-    @body.a = (3 * Math::PI / 2.5)
-
-    @shape_verts = [
-                    CP::Vec2.new(-BOX_SIZE, BOX_SIZE),
-                    CP::Vec2.new(BOX_SIZE, BOX_SIZE),
-                    CP::Vec2.new(BOX_SIZE, -BOX_SIZE),
-                    CP::Vec2.new(-BOX_SIZE, -BOX_SIZE),
-                   ]
-
-    @shape = CP::Shape::Poly.new(@body,
-                                 @shape_verts,
-                                 CP::Vec2.new(0,0))
-
-    @shape.e = 0
-    @shape.u = 1
-
-    # WE ADD THE THE BODY AND SHAPE TO THE SPACE WHICH THEY WILL LIVE IN
-    @window.space.add_body(@body)
-    @window.space.add_shape(@shape)
-  end
-
-  def update
-  end
-
-  def draw(scroll_x,scroll_y)
-    top_left, top_right, bottom_left, bottom_right = self.rotate
-    @window.draw_quad(top_left.x-scroll_x, top_left.y-scroll_y, @color,
-                      top_right.x-scroll_x, top_right.y-scroll_y, @color,
-                      bottom_left.x-scroll_x, bottom_left.y-scroll_y, @color,
-                      bottom_right.x-scroll_x, bottom_right.y-scroll_y, @color,
-                      1)
-  end
-
-  def rotate
-
-    half_diagonal = Math.sqrt(2) * (BOX_SIZE)
-    [-45, +45, -135, +135].collect do |angle|
-       CP::Vec2.new(@body.p.x + Gosu::offset_x(@body.a.radians_to_gosu + angle,
-                                               half_diagonal),
-
-    @body.p.y + Gosu::offset_y(@body.a.radians_to_gosu + angle,
-                                               half_diagonal))
-
-    end
-  end
+   def update
+       @position=@body.p
+   end
 
 end
 
+class Wheel
 
+   def initialize(image, body)
+       @image = image
+       @body = body
+   end
 
-###########################################################################################################
-# Main initialization											  #
-###########################################################################################################
+   def draw(scroll_x,scroll_y)
+       @image.draw_rot(@body.p.x-scroll_x, @body.p.y-scroll_y, ZOrder::Box, @body.a.radians_to_gosu)
+   end
 
+   def update
+   end
+
+end
 window = Game.new
 window.show

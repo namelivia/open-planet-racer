@@ -1,5 +1,8 @@
 require './CarPart.rb'
+<<<<<<< HEAD
 require './Afterburner.rb'
+=======
+>>>>>>> b9e1bbe6e11c139a1345c763a03f778833ddd3ff
 
 class Car
 
@@ -16,11 +19,15 @@ def initialize(window,space,initialPosition)
   @afterburner = 1000
   @destroyed = false
   @life = 5000
+<<<<<<< HEAD
   @afterburnerOn = false; 
+=======
+>>>>>>> b9e1bbe6e11c139a1345c763a03f778833ddd3ff
 
   @chasis = create_chasis(window,space,initialPosition)
   @wheel = create_wheel(window,space,initialPosition)
   @bigWheel = create_bigWheel(window,space,initialPosition)
+<<<<<<< HEAD
   afterburner_image = Image.new(window,"../media/gfx/afterburner.png",true)
   @afterburnerObject = Afterburner.new(afterburner_image, @chasis.body)
   @groove1  = CP::Constraint::GrooveJoint.new(@chasis.body,@wheel.body,CP::Vec2.new(50,40),CP::Vec2::ZERO,CP::Vec2::ZERO)
@@ -34,6 +41,19 @@ def initialize(window,space,initialPosition)
   @spring2 = CP::Constraint::DampedSpring.new(@chasis.body,@bigWheel.body,
                                                   CP::Vec2.new( -50, 40.0),
                                                   CP::Vec2::ZERO,20.0,4.0,10.5)
+=======
+  @joint1  = CP::Constraint::PinJoint.new(@chasis.body,@wheel.body,CP::Vec2::ZERO,CP::Vec2::ZERO)
+  space.add_constraint(@joint1)
+  @joint2  = CP::Constraint::PinJoint.new(@chasis.body,@bigWheel.body,CP::Vec2::ZERO,CP::Vec2::ZERO)
+  space.add_constraint(@joint2)
+  @spring1 = CP::Constraint::DampedSpring.new(@chasis.body,@wheel.body,
+                                                  CP::Vec2.new(5.0, 5.0),
+                                                  CP::Vec2::ZERO,10.0,400.0,1.5)
+  space.add_constraint(@spring1)
+  @spring2 = CP::Constraint::DampedSpring.new(@chasis.body,@bigWheel.body,
+                                                  CP::Vec2.new( -5.0, 5.0),
+                                                  CP::Vec2::ZERO,10.0,400.0,1.5)
+>>>>>>> b9e1bbe6e11c139a1345c763a03f778833ddd3ff
   space.add_constraint(@spring2)
   @motor = CP::Constraint::SimpleMotor.new(@chasis.body, @bigWheel.body,0)
   space.add_constraint(@motor)
@@ -43,9 +63,12 @@ def draw(window,scroll_x,scroll_y)
     @chasis.draw(scroll_x,scroll_y)
     @wheel.draw(scroll_x,scroll_y)
     @bigWheel.draw(scroll_x,scroll_y)
+<<<<<<< HEAD
     if @afterburnerOn then
       @afterburnerObject.draw(scroll_x,scroll_y)
     end
+=======
+>>>>>>> b9e1bbe6e11c139a1345c763a03f778833ddd3ff
     if not @destroyed then
     color = Color.new(255,100,100,100)
     window.draw_line(@wheel.body.p.x-scroll_x, @wheel.body.p.y-scroll_y, color, @chasis.body.p.x-scroll_x,
@@ -81,11 +104,16 @@ if not @destroyed then
   end
 
   if window.button_down? Gosu::Button::KbSpace and @afterburner > 0 then
+<<<<<<< HEAD
      @chasis.body.apply_impulse(CP::Vec2.new(Math::cos(@chasis.body.a),Math::sin(@chasis.body.a))*5,CP::Vec2::ZERO) 
      @afterburner -=5
      @afterburnerOn = true;
   else
      @afterburnerOn = false;
+=======
+     @chasis.body.v = @chasis.body.v*1.01
+     @afterburner -=5
+>>>>>>> b9e1bbe6e11c139a1345c763a03f778833ddd3ff
   end
 end
 
@@ -121,8 +149,13 @@ end
   end
 
   def destroy(space)
+<<<<<<< HEAD
       space.remove_constraint(@groove1)
       space.remove_constraint(@groove2)
+=======
+      space.remove_constraint(@joint1)
+      space.remove_constraint(@joint2)
+>>>>>>> b9e1bbe6e11c139a1345c763a03f778833ddd3ff
       space.remove_constraint(@spring1)
       space.remove_constraint(@spring2)
       space.remove_constraint(@motor)
@@ -154,4 +187,8 @@ end
        space.add_shape(shape)
        return bigWheel
   end
+<<<<<<< HEAD
+=======
+
+>>>>>>> b9e1bbe6e11c139a1345c763a03f778833ddd3ff
 end

@@ -1,10 +1,6 @@
 require 'rubygems'
 require 'gosu'
 require 'chipmunk'
-<<<<<<< HEAD
-=======
-require 'RMagick'
->>>>>>> b9e1bbe6e11c139a1345c763a03f778833ddd3ff
 require './Race.rb'
 
 include Gosu
@@ -31,15 +27,8 @@ class Game < Window
   def draw
     @race.draw(self)
   end
-<<<<<<< HEAD
-
-=======
->>>>>>> b9e1bbe6e11c139a1345c763a03f778833ddd3ff
 end
 
 window = Game.new
 window.show
-<<<<<<< HEAD
 exit!
-=======
->>>>>>> b9e1bbe6e11c139a1345c763a03f778833ddd3ff

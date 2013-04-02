@@ -29,15 +29,11 @@ def initialize(window,space,initialPosition)
   space.add_constraint(@groove2)
   @spring1 = CP::Constraint::DampedSpring.new(@chasis.body,@wheel.body,
                                                   CP::Vec2.new(50, 40),
-                                                  CP::Vec2::ZERO,20.0,4.0,10.5)
+                                                  CP::Vec2::ZERO,0.1,1.1,0.1)
   space.add_constraint(@spring1)
   @spring2 = CP::Constraint::DampedSpring.new(@chasis.body,@bigWheel.body,
                                                   CP::Vec2.new( -50, 40.0),
-                                                  CP::Vec2::ZERO,10.0,400.0,1.5)
-  space.add_constraint(@spring1)
-  @spring2 = CP::Constraint::DampedSpring.new(@chasis.body,@bigWheel.body,
-                                                  CP::Vec2.new( -5.0, 5.0),
-                                                  CP::Vec2::ZERO,10.0,400.0,1.5)
+                                                  CP::Vec2::ZERO,0.1,1.1,0.1)
   space.add_constraint(@spring2)
   @motor = CP::Constraint::SimpleMotor.new(@chasis.body, @bigWheel.body,0)
   space.add_constraint(@motor)
@@ -51,12 +47,30 @@ def draw(window,scroll_x,scroll_y)
       @afterburnerObject.draw(scroll_x,scroll_y)
     end
     if not @destroyed then
-    color = Color.new(255,100,100,100)
-    window.draw_line(@wheel.body.p.x-scroll_x, @wheel.body.p.y-scroll_y, color, @chasis.body.p.x-scroll_x,
-@chasis.body.p.y-scroll_y, color)
-    window.draw_line(@bigWheel.body.p.x-scroll_x, @bigWheel.body.p.y-scroll_y, color, @chasis.body.p.x-scroll_x,
-@chasis.body.p.y-scroll_y, color)
+      drawSuspension(window,scroll_x,scroll_y,@wheel.body.p.x,@wheel.body.p.y,@chasis.body.p.x,@chasis.body.p.y)
+      drawSuspension(window,scroll_x,scroll_y,@bigWheel.body.p.x,@bigWheel.body.p.y,@chasis.body.p.x,@chasis.body.p.y)
    end
+end
+
+def drawSuspension(window,scroll_x,scroll_y,point1X,point1Y,point2X,point2Y)
+    color = Color.new(255,100,100,100)
+    thickness = 6
+    vX = point2X-point1X
+    vY = point2Y-point1Y
+    pX = -vY
+    pY = vX
+    length = Math.sqrt(pX*pX+pY*pY);
+    nX = pX/length;
+    nY = pY/length;
+    p1x = point1X+nX*thickness/2-scroll_x;
+    p1y = point1Y+nY*thickness/2-scroll_y;
+    p2x = point1X-nX*thickness/2-scroll_x;
+    p2y = point1Y-nY*thickness/2-scroll_y;
+    p3x = point2X+nX*thickness/2-scroll_x;
+    p3y = point2Y+nY*thickness/2-scroll_y;
+    p4x = point2X-nX*thickness/2-scroll_x;
+    p4y = point2Y-nY*thickness/2-scroll_y;
+    window.draw_quad(p1x,p1y,color,p2x,p2y,color,p3x,p3y,color,p4x,p4y,color)
 end
 
 def update(window)
@@ -90,8 +104,6 @@ if not @destroyed then
      @afterburnerOn = true;
   else
      @afterburnerOn = false;
-     @chasis.body.v = @chasis.body.v*1.01
-     @afterburner -=5
   end
 end
 

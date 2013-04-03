@@ -1,5 +1,6 @@
 require './CarPart.rb'
 require './Afterburner.rb'
+require './SoundFX.rb'
 
 class Car
 
@@ -17,7 +18,14 @@ def initialize(window,space,initialPosition)
   @destroyed = false
   @life = 5000
   @afterburnerOn = false; 
+  @engineVolume = 0;
 
+  @engineSFX = SoundFX.new(window,"../media/sfx/engine.ogg")
+  @engineSFX.play(true)
+  @engineSFX.setVolume(0)
+  @rocketSFX = SoundFX.new(window,"../media/sfx/rocket.ogg")
+  @rocketSFX.play(true)
+  @rocketSFX.setVolume(0)
   @chasis = create_chasis(window,space,initialPosition)
   @wheel = create_wheel(window,space,initialPosition)
   @bigWheel = create_bigWheel(window,space,initialPosition)
@@ -75,6 +83,8 @@ end
 
 def update(window)
 if not @destroyed then
+  @engineVolume = @motor.rate/@maxSpeed
+  @engineSFX.setVolume(@engineVolume.abs)
   if window.button_down? Gosu::Button::KbUp and @motor.rate>@maxSpeed then
      @motor.rate -= 0.1
   else
@@ -99,11 +109,13 @@ if not @destroyed then
   end
 
   if window.button_down? Gosu::Button::KbSpace and @afterburner > 0 then
-     @chasis.body.apply_impulse(CP::Vec2.new(Math::cos(@chasis.body.a),Math::sin(@chasis.body.a))*5,CP::Vec2::ZERO) 
+     @chasis.body.apply_impulse(CP::Vec2.new(Math::cos(@chasis.body.a),-Math::sin(@chasis.body.a))*5,CP::Vec2::ZERO) 
      @afterburner -=5
      @afterburnerOn = true;
+     @rocketSFX.setVolume(1);
   else
      @afterburnerOn = false;
+     @rocketSFX.setVolume(0);
   end
 end
 

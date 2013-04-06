@@ -1,7 +1,7 @@
 require 'rubygems'
 require 'gosu'
 require 'chipmunk'
-require './Race.rb'
+require './Race/Race.rb'
 
 include Gosu
 

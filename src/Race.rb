@@ -8,7 +8,7 @@ class Race
 
   def initialize(window)
     @space = CP::Space.new
-    @space.gravity = CP::Vec2.new(0, 10)
+    @space.gravity = CP::Vec2.new(0,rand(10)+2)
     @music = Music.new(window,rand(6))
     @moon_sprite = Image.new(window,"../media/gfx/moon.png",true)
     @stars_image = Image.new(window,"../media/gfx/stars.png",true)
@@ -71,9 +71,9 @@ class Race
     bg_tile_x = 0
     bg_tile_y = 0
 
-    while bg_tile_y<SCREEN_HEIGHT do
+    while bg_tile_y<SCREEN_HEIGHT*3 do
 
-         while bg_tile_x<SCREEN_WIDTH do
+         while bg_tile_x<SCREEN_WIDTH*5 do
            @stars_image.draw(bg_tile_x-@scroll_x/10,bg_tile_y-@scroll_y/10,0)
            bg_tile_x = bg_tile_x+bg_width
          end

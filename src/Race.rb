@@ -26,7 +26,6 @@ class Race
 
     initialPosition = CP::Vec2.new(300,200)
     @car = Car.new(window,@space,initialPosition)
-
     @finished = false
     @font = Gosu::Font.new(window, "Arial", 18)
     @noticeFont = Gosu::Font.new(window,"Arial",60)
@@ -87,10 +86,10 @@ class Race
     @level.draw(window,@scroll_x,@scroll_y,SCREEN_HEIGHT,color3)
     @car.draw(window,@scroll_x,@scroll_y)
 
-    @font.draw("Afterburner: <c=ffff00>#{@car.afterburner}</c>", 10, 10, 1.0, 1.0, 1.0)
-    @font.draw("Time: <c=ffff00>#{@currentTime}</c>",10,22,1.0,1.0,1.0)
-    @font.draw("Song: <c=ffff00>#{@music.title}</c>",10,34,1.0,1.0,1.0)
-    @font.draw("Life: <c=ffff00>#{@car.life}</c>",10,45,1.0,1.0,1.0)
+    @font.draw("Afterburner", 10, 10, 1.0, 1.0, 1.0)
+    @font.draw("Time: <c=ffff00>#{@currentTime}</c>",10,52,1.0,1.0,1.0)
+    @font.draw("Song: <c=ffff00>#{@music.title}</c>",10,64,1.0,1.0,1.0)
+    @font.draw("Life: <c=ffff00>#{@car.life}</c>",10,78,1.0,1.0,1.0)
 
     if @car.destroyed then
       @noticeFont.draw("Destroyed!",SCREEN_WIDTH/2-100,SCREEN_HEIGHT/2,1.0,1.0,1.0)

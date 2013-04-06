@@ -1,6 +1,7 @@
 require './CarPart.rb'
 require './Afterburner.rb'
 require './SoundFX.rb'
+require './PowerBar.rb'
 
 class Car
 
@@ -32,6 +33,7 @@ def initialize(window,space,initialPosition)
   @bigWheel = create_bigWheel(window,space,initialPosition)
   afterburner_image = Image.new(window,"../media/gfx/afterburner.png",true)
   @afterburnerObject = Afterburner.new(afterburner_image, @chasis.body)
+  @powerBar = PowerBar.new(window,10,25,@afterburner)
   @groove1  = CP::Constraint::GrooveJoint.new(@chasis.body,@wheel.body,CP::Vec2.new(50,40),CP::Vec2::ZERO,CP::Vec2::ZERO)
   space.add_constraint(@groove1)
   @groove2  = CP::Constraint::GrooveJoint.new(@chasis.body,@bigWheel.body,CP::Vec2.new(-50,40),CP::Vec2::ZERO,CP::Vec2::ZERO)
@@ -59,6 +61,7 @@ def draw(window,scroll_x,scroll_y)
       drawSuspension(window,scroll_x,scroll_y,@wheel.body.p.x,@wheel.body.p.y,@chasis.body.p.x,@chasis.body.p.y)
       drawSuspension(window,scroll_x,scroll_y,@bigWheel.body.p.x,@bigWheel.body.p.y,@chasis.body.p.x,@chasis.body.p.y)
    end
+   @powerBar.draw(@afterburner)
 end
 
 def drawSuspension(window,scroll_x,scroll_y,point1X,point1Y,point2X,point2Y)

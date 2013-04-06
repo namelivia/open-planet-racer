@@ -12,6 +12,7 @@ class Race
     @music = Music.new(window,rand(6))
     @moon_sprite = Image.new(window,"../media/gfx/moon.png",true)
     @stars_image = Image.new(window,"../media/gfx/stars.png",true)
+    @finishSFX = SoundFX.new(window,"../media/sfx/finish.ogg")
     @dt = (1.0/60.0)
 
     @scroll_x = @scroll_y = 0
@@ -104,6 +105,8 @@ class Race
     if @car.position.x > @level.levelLength and not @finished then
       @finished = true
       @finishTime = @currentTime
+      @finishSFX.play(false)
+      @car.finish()
     end
 
   end

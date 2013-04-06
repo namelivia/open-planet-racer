@@ -16,6 +16,7 @@ def initialize(window,space,initialPosition)
   @maxTorque = 1000
   @afterburner = 1000
   @destroyed = false
+  @finished = false
   @life = 5000
   @afterburnerOn = false; 
   @engineVolume = 0;
@@ -82,7 +83,7 @@ def drawSuspension(window,scroll_x,scroll_y,point1X,point1Y,point2X,point2Y)
 end
 
 def update(window)
-if not @destroyed then
+if not @destroyed and not @finished then
   @engineVolume = @motor.rate/@maxSpeed
   @engineSFX.setVolume(@engineVolume.abs)
   if window.button_down? Gosu::Button::KbUp and @motor.rate>@maxSpeed then
@@ -117,6 +118,8 @@ if not @destroyed then
      @afterburnerOn = false;
      @rocketSFX.setVolume(0);
   end
+else
+  @engineSFX.setVolume(0);
 end
 
   if @life <= 0 then
@@ -172,6 +175,9 @@ end
        space.add_body(body)
        space.add_shape(shape)
        return wheel
+  end
+  def finish()
+      @finished = true
   end
 
   def create_bigWheel(window,space,initialPosition)

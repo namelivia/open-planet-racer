@@ -20,8 +20,6 @@ class Race
     @scroll_2x = @scroll_2y = 0
 
     @time = 0
-    @sub_time = 0
-
     floorColor = Color.new(255,rand(155)+100,rand(155)+100,rand(155)+100)
     @level = Level.new(window,@space,100,200,floorColor)
 
@@ -30,7 +28,6 @@ class Race
     @finished = false
     @font = Gosu::Font.new(window, "Arial", 18)
     @noticeFont = Gosu::Font.new(window,"Arial",60)
-    @initialTime = Time.now
   end
 
   def update(window)
@@ -45,9 +42,6 @@ class Race
        if @paused then
          @pauseTime = Time.now
          puts @pauseTime
-       else
-         @currentTime -= Time.now - @pauseTime
-         puts Time.now-@pauseTime
        end
        @car.pause(@paused)
        @lastPause = 0
@@ -61,7 +55,7 @@ class Race
     end
 
     if not @finished and not @car.destroyed then
-       @currentTime = Time.now - @initialTime
+       @time += 0.017
     end
     @car.update(window)
     if not @finished then
@@ -110,7 +104,7 @@ class Race
     @car.draw(window,@scroll_x,@scroll_y)
 
     @font.draw("Afterburner", 10, 10, 1.0, 1.0, 1.0)
-    @font.draw("Time: <c=ffff00>#{@currentTime}</c>",10,52,1.0,1.0,1.0)
+    @font.draw("Time: <c=ffff00>#{'%.2f' % @time}</c>",10,52,1.0,1.0,1.0)
     @font.draw("Song: <c=ffff00>#{@music.title}</c>",10,64,1.0,1.0,1.0)
     @font.draw("Life: <c=ffff00>#{@car.life}</c>",10,78,1.0,1.0,1.0)
 
@@ -126,7 +120,6 @@ class Race
 
     if @car.position.x > @level.levelLength and not @finished then
       @finished = true
-      @finishTime = @currentTime
       @finishSFX.play(false)
       @car.finish()
     end

@@ -1,6 +1,7 @@
 require './Race/Music.rb'
 require './Race/Car.rb'
 require './Race/Level.rb'
+require './Race/StarField.rb'
 
 class Race
 
@@ -11,13 +12,12 @@ class Race
     @space.gravity = CP::Vec2.new(0,rand(10)+2)
     @music = Music.new(window,rand(6))
     @moon_sprite = Image.new(window,"../media/gfx/moon.png",true)
-    @stars_image = Image.new(window,"../media/gfx/stars.png",true)
     @finishSFX = SoundFX.new(window,"../media/sfx/finish.ogg")
     @dt = (1.0/60.0)
     @paused = false
     @lastPause = 0 
     @scroll_x = @scroll_y = 0
-    @scroll_2x = @scroll_2y = 0
+    @starField = StarField.new(SCREEN_WIDTH,SCREEN_HEIGHT)
 
     @time = 0
     floorColor = Color.new(255,rand(155)+100,rand(155)+100,rand(155)+100)
@@ -41,7 +41,6 @@ class Race
        @paused = !@paused
        if @paused then
          @pauseTime = Time.now
-         puts @pauseTime
        end
        @car.pause(@paused)
        @lastPause = 0
@@ -81,24 +80,9 @@ class Race
         size = size
 
     end
+ 
+    @starField.draw(window,@scroll_x,@scroll_y)
 
-    bg_width = @stars_image.width
-    bg_height = @stars_image.height
-
-    bg_tile_x = 0
-    bg_tile_y = 0
-
-    while bg_tile_y<SCREEN_HEIGHT*3 do
-
-         while bg_tile_x<SCREEN_WIDTH*5 do
-           @stars_image.draw(bg_tile_x-@scroll_x/10,bg_tile_y-2*SCREEN_HEIGHT-@scroll_y/10,0)
-           bg_tile_x = bg_tile_x+bg_width
-         end
-
-         bg_tile_y = bg_tile_y+bg_height
-         bg_tile_x = 0
-
-    end
     @moon_sprite.draw(500-@scroll_x/5,100-@scroll_y/5,0)
     @level.draw(window,@scroll_x,@scroll_y,SCREEN_HEIGHT,color3)
     @car.draw(window,@scroll_x,@scroll_y)
@@ -127,6 +111,8 @@ class Race
       pausecolor = Color.new(100,0,0,0)
       window.draw_quad(0,0,pausecolor,0,SCREEN_HEIGHT,pausecolor,SCREEN_WIDTH,0,pausecolor,SCREEN_WIDTH,SCREEN_HEIGHT,pausecolor )
     end
+      test = Color.new(255,255,255,255)
+      window.draw_line(100,100,test,100,100,test) 
   end
 end
 

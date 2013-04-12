@@ -2,6 +2,7 @@ require './Race/Music.rb'
 require './Race/Car.rb'
 require './Race/Level.rb'
 require './Race/StarField.rb'
+require './Race/CollisionHandler.rb'
 
 class Race
 
@@ -25,6 +26,7 @@ class Race
 
     initialPosition = CP::Vec2.new(300,200)
     @car = Car.new(window,@space,initialPosition)
+    @space.add_collision_handler(:chasis,:floor,CollisionHandler.new(window,@car)) 
     @finished = false
     @font = Gosu::Font.new(window, "Arial", 18)
     @noticeFont = Gosu::Font.new(window,"Arial",60)
@@ -95,7 +97,7 @@ class Race
     if @car.destroyed then
       @noticeFont.draw("Destroyed!",SCREEN_WIDTH/2-100,SCREEN_HEIGHT/2,1.0,1.0,1.0)
     end
-    if @car.position.x < 0 and not @car.destroyed then
+    if @car.life < 0 and not @car.destroyed then
        @car.destroy(@space)
     end
     if @finished then

@@ -18,7 +18,7 @@ def initialize(window,space,initialPosition)
   @afterburner = 1000
   @destroyed = false
   @finished = false
-  @life = 5000
+  @life = 9
   @afterburnerOn = false; 
   @engineVolume = 0;
 
@@ -134,10 +134,6 @@ if not @destroyed and not @finished then
 else
   @engineSFX.setVolume(0);
 end
-
-  if @life <= 0 then
-   destroy(window)
-  end
   @position = @chasis.body.p
 end
 
@@ -158,8 +154,9 @@ end
        body = CP::Body.new(1, CP::moment_for_poly(10.0, chasis_vertices, CP::Vec2.new(0, 0)))
        body.p = initialPosition
        shape = CP::Shape::Poly.new(body, chasis_vertices, CP::Vec2.new(0, 0))
-       shape.e = 0.2
-       shape.u = 0.1
+       shape.e = 0.5
+       shape.u = 0.4
+       shape.collision_type = :chasis
        chasis = CarPart.new(chasis_image, body)
        space.add_body(body)
        space.add_shape(shape)

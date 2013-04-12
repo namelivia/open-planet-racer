@@ -25,6 +25,7 @@ def initialize(window,space,length,randomness,floorColor)
         @shape = CP::Shape::Poly.new(@body,@shape_verts,CP::Vec2.new(0,0))
         @shape.e = 0
         @shape.u = 1
+        @shape.collision_type = :floor
         space.add_static_shape(@shape)
         previous = previous-altura
     end

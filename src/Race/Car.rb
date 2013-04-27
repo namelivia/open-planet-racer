@@ -19,8 +19,8 @@ def initialize(window,space,initialPosition)
   @destroyed = false
   @finished = false
   @life = 9
-  @afterburnerOn = false; 
-  @engineVolume = 0;
+  @afterburnerOn = false 
+  @engineVolume = 0
 
   @engineSFX = SoundFX.new(window,"../media/sfx/engine.ogg")
   @engineSFX.play(true)
@@ -31,8 +31,8 @@ def initialize(window,space,initialPosition)
   @chasis = create_chasis(window,space,initialPosition)
   @wheel = create_wheel(window,space,initialPosition)
   @bigWheel = create_bigWheel(window,space,initialPosition)
-  afterburner_image = Image.new(window,"../media/gfx/afterburner.png",true)
-  @afterburnerObject = Afterburner.new(afterburner_image, @chasis.body)
+  image = *Image.load_tiles(window,"../media/gfx/afterburner.png",19,42,true)
+  @afterburnerObject = Afterburner.new(image, @chasis.body)
   @powerBar = PowerBar.new(window,10,25,@afterburner)
   @groove1  = CP::Constraint::GrooveJoint.new(@chasis.body,@wheel.body,CP::Vec2.new(50,40),CP::Vec2::ZERO,CP::Vec2::ZERO)
   space.add_constraint(@groove1)
@@ -55,12 +55,12 @@ def draw(window,scroll_x,scroll_y)
       drawSuspension(window,scroll_x,scroll_y,@wheel.body.p.x,@wheel.body.p.y,@chasis.body.p.x,@chasis.body.p.y)
       drawSuspension(window,scroll_x,scroll_y,@bigWheel.body.p.x,@bigWheel.body.p.y,@chasis.body.p.x,@chasis.body.p.y)
    end
-    @chasis.draw(scroll_x,scroll_y)
-    @wheel.draw(scroll_x,scroll_y)
-    @bigWheel.draw(scroll_x,scroll_y)
     if @afterburnerOn then
       @afterburnerObject.draw(scroll_x,scroll_y)
     end
+    @chasis.draw(scroll_x,scroll_y)
+    @wheel.draw(scroll_x,scroll_y)
+    @bigWheel.draw(scroll_x,scroll_y)
    @powerBar.draw(@afterburner)
 end
 
@@ -81,17 +81,17 @@ def drawSuspension(window,scroll_x,scroll_y,point1X,point1Y,point2X,point2Y)
     vY = point2Y-point1Y
     pX = -vY
     pY = vX
-    length = Math.sqrt(pX*pX+pY*pY);
+    length = Math.sqrt(pX*pX+pY*pY)
     nX = pX/length;
     nY = pY/length;
-    p1x = point1X+nX*thickness/2-scroll_x;
-    p1y = point1Y+nY*thickness/2-scroll_y;
-    p2x = point1X-nX*thickness/2-scroll_x;
-    p2y = point1Y-nY*thickness/2-scroll_y;
-    p3x = point2X+nX*thickness/2-scroll_x;
-    p3y = point2Y+nY*thickness/2-scroll_y;
-    p4x = point2X-nX*thickness/2-scroll_x;
-    p4y = point2Y-nY*thickness/2-scroll_y;
+    p1x = point1X+nX*thickness/2-scroll_x
+    p1y = point1Y+nY*thickness/2-scroll_y
+    p2x = point1X-nX*thickness/2-scroll_x
+    p2y = point1Y-nY*thickness/2-scroll_y
+    p3x = point2X+nX*thickness/2-scroll_x
+    p3y = point2Y+nY*thickness/2-scroll_y
+    p4x = point2X-nX*thickness/2-scroll_x
+    p4y = point2Y-nY*thickness/2-scroll_y
     window.draw_quad(p1x,p1y,color,p2x,p2y,color,p3x,p3y,color,p4x,p4y,color)
 end
 
@@ -123,16 +123,17 @@ if not @destroyed and not @finished then
   end
 
   if window.button_down? Gosu::Button::KbSpace and @afterburner > 0 then
-     @chasis.body.apply_impulse(CP::Vec2.new(Math::cos(@chasis.body.a),-Math::sin(@chasis.body.a))*5,CP::Vec2::ZERO) 
+     @chasis.body.apply_impulse(CP::Vec2.new(Math::cos(@chasis.body.a),Math::sin(@chasis.body.a))*5,CP::Vec2::ZERO)
      @afterburner -=5
-     @afterburnerOn = true;
-     @rocketSFX.setVolume(1);
+     @afterburnerOn = true
+     @afterburnerObject.update()
+     @rocketSFX.setVolume(1)
   else
-     @afterburnerOn = false;
-     @rocketSFX.setVolume(0);
+     @afterburnerOn = false
+     @rocketSFX.setVolume(0)
   end
 else
-  @engineSFX.setVolume(0);
+  @engineSFX.setVolume(0)
 end
   @position = @chasis.body.p
 end

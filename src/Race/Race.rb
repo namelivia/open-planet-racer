@@ -26,7 +26,9 @@ class Race
 
     initialPosition = CP::Vec2.new(300,200)
     @car = Car.new(window,@space,initialPosition)
-    @space.add_collision_handler(:chasis,:floor,CollisionHandler.new(window,@car)) 
+    @space.add_collision_handler(:chasis,:floor,CollisionHandler.new(window,@car,0)) 
+    @space.add_collision_handler(:wheel,:floor,CollisionHandler.new(window,@car,1)) 
+    @space.add_collision_handler(:bigWheel,:floor,CollisionHandler.new(window,@car,2)) 
     @finished = false
     @font = Gosu::Font.new(window, "Arial", 18)
     @noticeFont = Gosu::Font.new(window,"Arial",60)

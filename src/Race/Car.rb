@@ -182,6 +182,7 @@ end
        shape = CP::Shape::Circle.new(body,16, CP::Vec2.new(0, 0))
        shape.e = 0.4
        shape.u = 1
+       shape.collision_type = :wheel
        wheel = CarPart.new(wheel_image, body)
        space.add_body(body)
        space.add_shape(shape)
@@ -198,6 +199,7 @@ end
        shape = CP::Shape::Circle.new(body,25, CP::Vec2.new(0, 0))
        shape.e = 0.4
        shape.u = 1
+       shape.collision_type = :bigWheel
        bigWheel = CarPart.new(bigWheel_image, body)
        space.add_body(body)
        space.add_shape(shape)

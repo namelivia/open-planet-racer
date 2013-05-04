@@ -16,7 +16,7 @@ class Game < Window
     super(SCREEN_WIDTH, SCREEN_HEIGHT, false)
     self.caption = "Planet Racer"
     @gameState = GameState.new()
-        @intro = Intro.new(self)
+    @intro = Intro.new(self)
   end
 
   def update
@@ -31,11 +31,17 @@ class Game < Window
      if @gameState.stage == 0
         @intro.draw(self)
         if @intro.finished
+          @intro = nil
           @gameState.stage += 1
           @race = Race.new(self)
         end
      else
         @race.draw(self)
+        if @race.finished
+          @race = nil
+          @gameState.stage -= 1
+          @intro = Intro.new(self)
+        end
      end
   end
 end

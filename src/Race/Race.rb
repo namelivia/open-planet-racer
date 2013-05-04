@@ -6,6 +6,7 @@ require './Race/CollisionHandler.rb'
 
 class Race
 
+  attr_accessor :finished
   SUBSTEPS = 10
 
   def initialize(window)
@@ -19,7 +20,7 @@ class Race
     @lastPause = 0 
     @scroll_x = @scroll_y = 0
     @starField = StarField.new(SCREEN_WIDTH,SCREEN_HEIGHT)
-
+    @counter = 0
     @time = 0
     floorColor = Color.new(255,rand(155)+100,rand(155)+100,rand(155)+100)
     @level = Level.new(window,@space,100,200,floorColor)
@@ -29,7 +30,7 @@ class Race
     @space.add_collision_handler(:chasis,:floor,CollisionHandler.new(window,@car,0)) 
     @space.add_collision_handler(:wheel,:floor,CollisionHandler.new(window,@car,1)) 
     @space.add_collision_handler(:bigWheel,:floor,CollisionHandler.new(window,@car,2)) 
-    @finished = false
+    @finishedText = false
     @font = Gosu::Font.new(window, "Arial", 18)
     @noticeFont = Gosu::Font.new(window,"Arial",60)
   end
@@ -57,14 +58,19 @@ class Race
       @space.step(@dt)
     end
 
-    if not @finished and not @car.destroyed then
+    if not @finishedText and not @car.destroyed then
        @time += 0.017
+    else
+      @counter += 1
     end
     @car.update(window)
-    if not @finished then
+    if not @finishedText then
       @scroll_x = @car.position.x-SCREEN_WIDTH/2
       @scroll_y = @car.position.y-SCREEN_HEIGHT/2
     end
+    end
+    if @counter == 400
+      @finished = true
     end
   end
 
@@ -102,12 +108,12 @@ class Race
     if @car.life < 0 and not @car.destroyed then
        @car.destroy(@space)
     end
-    if @finished then
+    if @finishedText then
       @noticeFont.draw("Finished!",SCREEN_WIDTH/2-100,SCREEN_HEIGHT/2,1.0,1.0,1.0)
     end
 
-    if @car.position.x > @level.levelLength and not @finished then
-      @finished = true
+    if @car.position.x > @level.levelLength and not @finishedText then
+      @finishedText = true
       @finishSFX.play(false)
       @car.finish()
     end

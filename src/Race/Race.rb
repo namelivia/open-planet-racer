@@ -2,6 +2,7 @@ require './Race/Music.rb'
 require './Race/Car.rb'
 require './Race/Level.rb'
 require './Race/StarField.rb'
+require './Race/Minimap.rb'
 require './Race/CollisionHandler.rb'
 
 class Race
@@ -22,6 +23,7 @@ class Race
     @starField = StarField.new(SCREEN_WIDTH,SCREEN_HEIGHT)
     @counter = 0
     @time = 0
+    @rivalTime = rand(50)
     floorColor = Color.new(255,rand(155)+100,rand(155)+100,rand(155)+100)
     @level = Level.new(window,@space,100,200,floorColor)
 
@@ -33,6 +35,7 @@ class Race
     @finishedText = false
     @font = Gosu::Font.new(window, "Arial", 18)
     @noticeFont = Gosu::Font.new(window,"Arial",60)
+    @minimap = Minimap.new(window)
   end
 
   def update(window)
@@ -72,6 +75,9 @@ class Race
     if @counter == 400
       @finished = true
     end
+    completed = ((@car.position.x-300)/(@level.levelLength-230))*180
+    rival = (@time/@rivalTime)*180
+    @minimap.update(completed,rival)
   end
 
   def draw(window)
@@ -97,19 +103,8 @@ class Race
     @level.draw(window,@scroll_x,@scroll_y,SCREEN_HEIGHT,color3)
     @car.draw(window,@scroll_x,@scroll_y)
 
-    @font.draw("Afterburner", 10, 10, 1.0, 1.0, 1.0)
-    @font.draw("Time: <c=ffff00>#{'%.2f' % @time}</c>",10,52,1.0,1.0,1.0)
-    @font.draw("Song: <c=ffff00>#{@music.title}</c>",10,64,1.0,1.0,1.0)
-    @font.draw("Life: <c=ffff00>#{@car.life}</c>",10,78,1.0,1.0,1.0)
-    completed = ((@car.position.x-300)/(@level.levelLength-230))*100
-    if completed < 0 then
-       completed = 0
-    end
-    if completed > 100 then
-       completed = 100
-    end
-    @font.draw("Completed: <c=ffff00>#{'%.2f' % completed}</c>",10,90,1.0,1.0,1.0)
-
+    @font.draw("<c=ffff00>#{'%.2f' % @time}</c>",45,922,1.0,1.0,1.0)
+    @minimap.draw(20,52)
     if @car.destroyed then
       @noticeFont.draw("Destroyed!",SCREEN_WIDTH/2-100,SCREEN_HEIGHT/2,1.0,1.0,1.0)
     end

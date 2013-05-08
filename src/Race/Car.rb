@@ -21,7 +21,6 @@ def initialize(window,space,initialPosition)
   @life = 9
   @afterburnerOn = false 
   @engineVolume = 0
-
   @engineSFX = SoundFX.new(window,"../media/sfx/engine.ogg")
   @engineSFX.play(true)
   @engineSFX.setVolume(0)
@@ -33,7 +32,7 @@ def initialize(window,space,initialPosition)
   @bigWheel = create_bigWheel(window,space,initialPosition)
   image = *Image.load_tiles(window,"../media/gfx/afterburner.png",19,42,true)
   @afterburnerObject = Afterburner.new(image, @chasis.body)
-  @powerBar = PowerBar.new(window,10,25,@afterburner)
+  @powerBar = PowerBar.new(window,5,5,@afterburner)
   @groove1  = CP::Constraint::GrooveJoint.new(@chasis.body,@wheel.body,CP::Vec2.new(50,40),CP::Vec2::ZERO,CP::Vec2::ZERO)
   space.add_constraint(@groove1)
   @groove2  = CP::Constraint::GrooveJoint.new(@chasis.body,@bigWheel.body,CP::Vec2.new(-50,40),CP::Vec2::ZERO,CP::Vec2::ZERO)

@@ -13,6 +13,21 @@ def initialize(window,space,length,randomness,floorColor)
     @body.v = CP::Vec2.new(0, 0)
 
     previous = 400
+
+    #invisible wall
+
+    @shape_verts = [
+               CP::Vec2.new(-5,600),
+               CP::Vec2.new(0, 600),
+               CP::Vec2.new(0,-2000),
+               CP::Vec2.new(-5,-2000)
+                   ]
+    @shape = CP::Shape::Poly.new(@body,@shape_verts,CP::Vec2.new(0,0))
+    @shape.e = 0
+    @shape.u = 1
+    @shape.collision_type = :floor
+    space.add_static_shape(@shape)
+
     @heights.each_with_index do |altura,index|
 
         @shape_verts = [
@@ -32,7 +47,10 @@ def initialize(window,space,length,randomness,floorColor)
   end
 
   def draw(window,scroll_x,scroll_y,screen_height,color)
-    previous = 400
+      
+    window.draw_quad(-500-scroll_x,800-scroll_y,@floorColor,-500-scroll_x,400-scroll_y,@floorColor,0-scroll_x,400-scroll_y,@floorColor,0-scroll_x,800-scroll_y,@floorColor)
+    
+previous = 400
     @heights.each_with_index do |altura,index|
       window.draw_quad(200*index-scroll_x,2000-scroll_y,@floorColor,200*index-scroll_x,previous-scroll_y,@floorColor,200*index+200-scroll_x,previous-altura-scroll_y,@floorColor,200*index+200-scroll_x,2000-scroll_y,@floorColor)
       previous = previous-altura

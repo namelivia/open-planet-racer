@@ -27,8 +27,10 @@ class Race
     floorColor = Color.new(255,rand(155)+100,rand(155)+100,rand(155)+100)
     @level = Level.new(window,@space,100,200,floorColor)
 
-    initialPosition = CP::Vec2.new(300,200)
-    @car = Car.new(window,@space,initialPosition)
+    initialPosition = CP::Vec2.new(80,200)
+    rivalInitialPosition = CP::Vec2.new(-80,200)
+    @car = Car.new(window,@space,initialPosition,true)
+    @rival = Car.new(window,@space,rivalInitialPosition,false)
     @space.add_collision_handler(:chasis,:floor,CollisionHandler.new(window,@car,0)) 
     @space.add_collision_handler(:wheel,:floor,CollisionHandler.new(window,@car,1)) 
     @space.add_collision_handler(:bigWheel,:floor,CollisionHandler.new(window,@car,2)) 
@@ -51,6 +53,7 @@ class Race
          @pauseTime = Time.now
        end
        @car.pause(@paused)
+       @rival.pause(@paused)
        @lastPause = 0
      end
     end
@@ -67,6 +70,7 @@ class Race
       @counter += 1
     end
     @car.update(window)
+    @rival.update(window)
     if not @finishedText then
       @scroll_x = @car.position.x-SCREEN_WIDTH/2
       @scroll_y = @car.position.y-SCREEN_HEIGHT/2
@@ -102,6 +106,7 @@ class Race
     @moon_sprite.draw(500-@scroll_x/5,100-@scroll_y/5,0)
     @level.draw(window,@scroll_x,@scroll_y,SCREEN_HEIGHT,color3)
     @car.draw(window,@scroll_x,@scroll_y)
+    @rival.draw(window,@scroll_x,@scroll_y)
 
     @font.draw("<c=ffff00>#{'%.2f' % @time}</c>",45,922,1.0,1.0,1.0)
     @minimap.draw(20,52)

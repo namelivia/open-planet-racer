@@ -28,6 +28,20 @@ def initialize(window,space,length,randomness,floorColor)
     @shape.collision_type = :floor
     space.add_static_shape(@shape)
 
+    #rival runway
+    @shape_verts = [
+               CP::Vec2.new(-200,600),
+               CP::Vec2.new(0, 600),
+               CP::Vec2.new(0,400),
+               CP::Vec2.new(-200,400)
+                   ]
+
+    @shape = CP::Shape::Poly.new(@body,@shape_verts,CP::Vec2.new(0,0))
+    @shape.e = 0
+    @shape.u = 1
+    @shape.collision_type = :floor
+    space.add_static_shape(@shape)
+
     @heights.each_with_index do |altura,index|
 
         @shape_verts = [

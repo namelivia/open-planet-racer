@@ -10,17 +10,19 @@ class Minimap
        @rArrowOffX = 50
        @rArrowOffY = -10
        @rFinished = false
+       @angle = 0
+       @rAngle = 0
    end
 
    def draw(x,y)
        @background.draw(x,y,0)
        if not @finished then
-          @arrow.draw_rot(x+50+@arrowOffX,y+@arrowOffY,0,0)
+          @arrow.draw_rot(x+50+@arrowOffX,y+@arrowOffY,0,@angle.radians_to_gosu)
        else
           @point.draw_rot(x+50,y+110,0,0)
        end
        if not @rFinished then
-          @arrow.draw_rot(x+50-@rArrowOffX,y+@rArrowOffY,0,0)
+          @arrow.draw_rot(x+50-@rArrowOffX,y+@rArrowOffY,0,-@rAngle.radians_to_gosu)
        else
           @point.draw_rot(x+50,y+110,0,0)
        end
@@ -34,9 +36,9 @@ class Minimap
         @finished = true
       end
 
-      angle = percent * Math::PI / 180
-      @arrowOffX = Math.sin(angle)*60
-      @arrowOffY = 50-(Math.cos(angle)*60)
+      @angle = percent * Math::PI / 180
+      @arrowOffX = Math.sin(@angle)*60
+      @arrowOffY = 50-(Math.cos(@angle)*60)
       
       if rival < 0 then
         rival = 0
@@ -45,8 +47,8 @@ class Minimap
         @rFinished = true
       end
 
-      rAngle = rival * Math::PI / 180
-      @rArrowOffX = Math.sin(rAngle)*60
-      @rArrowOffY = 50-(Math.cos(rAngle)*60)
+      @rAngle = rival * Math::PI / 180
+      @rArrowOffX = Math.sin(@rAngle)*60
+      @rArrowOffY = 50-(Math.cos(@rAngle)*60)
    end
 end

@@ -1,11 +1,13 @@
 class Level
 
   attr_accessor :levelLength
+  attr_accessor :finishHeight
 
 def initialize(window,space,length,randomness,floorColor)
     @floorColor = floorColor
     @levelLength = (length+10)*200
     @heights = length.times.map{rand(randomness)-50}
+    @finishHeight = @heights[length-1]
     @heights = [0,0,0,0,0,0,0].push(*@heights).push(*[0,0,0,0,0,0,0])
 
     @body = CP::Body.new_static()
@@ -30,10 +32,10 @@ def initialize(window,space,length,randomness,floorColor)
 
     #rival runway
     @shape_verts = [
-               CP::Vec2.new(-200,600),
+               CP::Vec2.new(-600,600),
                CP::Vec2.new(0, 600),
                CP::Vec2.new(0,400),
-               CP::Vec2.new(-200,400)
+               CP::Vec2.new(-600,400)
                    ]
 
     @shape = CP::Shape::Poly.new(@body,@shape_verts,CP::Vec2.new(0,0))
@@ -58,6 +60,7 @@ def initialize(window,space,length,randomness,floorColor)
         space.add_static_shape(@shape)
         previous = previous-altura
     end
+    @finishHeight = previous
   end
 
   def draw(window,scroll_x,scroll_y,screen_height,color)

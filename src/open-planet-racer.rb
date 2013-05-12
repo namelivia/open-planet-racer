@@ -38,6 +38,7 @@ class Game < Window
      else
         @race.draw(self)
         if @race.finished
+          @race.finalize()
           @race = nil
           @gameState.stage -= 1
           @intro = Intro.new(self)

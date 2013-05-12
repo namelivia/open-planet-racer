@@ -1,3 +1,5 @@
+require './Race/StarField.rb'
+
 class Level
 
   attr_accessor :levelLength
@@ -9,6 +11,8 @@ def initialize(window,space,length,randomness,floorColor)
     @heights = length.times.map{rand(randomness)-50}
     @finishHeight = @heights[length-1]
     @heights = [0,0,0,0,0,0,0].push(*@heights).push(*[0,0,0,0,0,0,0])
+
+    @starField = StarField.new(window,SCREEN_WIDTH,SCREEN_HEIGHT,@levelLength,@finishHeight)
 
     @body = CP::Body.new_static()
     @body.p = CP::Vec2.new(0,0)
@@ -64,7 +68,7 @@ def initialize(window,space,length,randomness,floorColor)
   end
 
   def draw(window,scroll_x,scroll_y,screen_height,color)
-      
+    @starField.draw(window,scroll_x,scroll_y) 
     window.draw_quad(-500-scroll_x,800-scroll_y,@floorColor,-500-scroll_x,400-scroll_y,@floorColor,0-scroll_x,400-scroll_y,@floorColor,0-scroll_x,800-scroll_y,@floorColor)
     
 previous = 400

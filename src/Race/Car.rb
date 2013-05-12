@@ -278,4 +278,9 @@ def create_chasis(window,space,initialPosition,direction)
        space.add_shape(shape)
        return bigWheel
   end
+
+  def finalize()
+    @engineSFX.stop()
+    @rocketSFX.stop()
+  end
 end

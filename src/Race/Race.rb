@@ -1,10 +1,8 @@
 require './Race/Car.rb'
 require './Race/Music.rb'
 require './Race/Level.rb'
-require './Race/Minimap.rb'
-require './Race/PowerBar.rb'
-require './Race/StarField.rb'
 require './Race/CollisionHandler.rb'
+require './Race/UI.rb'
 
 class Race
 
@@ -24,15 +22,9 @@ class Race
     @space.add_collision_handler(:wheel,:floor,CollisionHandler.new(window,@car,1)) 
     @space.add_collision_handler(:bigWheel,:floor,CollisionHandler.new(window,@car,2)) 
     
+    @userInterface = UI.new(window,@car.afterburner)
     @music = Music.new(window,rand(6))
     @finishSFX = SoundFX.new(window,"../media/sfx/finish.ogg")
-    
-    @starField = StarField.new(SCREEN_WIDTH,SCREEN_HEIGHT)
-    @moon_sprite = Image.new(window,"../media/gfx/moon.png",true)
-    @minimap = Minimap.new(window)
-    @powerbar = PowerBar.new(window,5,5,@car.afterburner)
-    @font = Gosu::Font.new(window, "Arial", 18)
-    @noticeFont = Gosu::Font.new(window,"Arial",60)
     
     @dt = (1.0/60.0)
     @paused = false
@@ -99,7 +91,7 @@ class Race
 
     completed = ((@car.position.x-300)/(@level.levelLength-230))*180
     rival = (@time/@rivalTime)*180
-    @minimap.update(completed,rival)
+    @userInterface.update(completed,rival)
     #Rival AI
     if @time<5 then
        @rival.accelerate(true)
@@ -131,22 +123,11 @@ class Race
 
     end
  
-    @starField.draw(window,@scroll_x,@scroll_y)
-    @moon_sprite.draw(500-@scroll_x/5,100-@scroll_y/5,0)
     @level.draw(window,@scroll_x,@scroll_y,SCREEN_HEIGHT,color3)
     @car.draw(window,@scroll_x,@scroll_y)
     @rival.draw(window,@scroll_x,@scroll_y)
-    @powerbar.draw(@car.afterburner)
-    @font.draw("<c=ffff00>#{'%.2f' % @time}</c>",50,100,1.0,1.0,1.0)
-    @minimap.draw(20,52)
-    if @car.destroyed then
-      @noticeFont.draw("Destroyed!",SCREEN_WIDTH/2-100,SCREEN_HEIGHT/2,1.0,1.0,1.0)
-    end
     if @car.life < 0 and not @car.destroyed then
        @car.destroy(@space)
-    end
-    if @finishedText then
-      @noticeFont.draw("Finished!",SCREEN_WIDTH/2-100,SCREEN_HEIGHT/2,1.0,1.0,1.0)
     end
 
     if @car.position.x > @level.levelLength and not @finishedText then
@@ -159,8 +140,14 @@ class Race
       pausecolor = Color.new(100,0,0,0)
       window.draw_quad(0,0,pausecolor,0,SCREEN_HEIGHT,pausecolor,SCREEN_WIDTH,0,pausecolor,SCREEN_WIDTH,SCREEN_HEIGHT,pausecolor )
     end
-      test = Color.new(255,255,255,255)
-      window.draw_line(100,100,test,100,100,test) 
+     @userInterface.draw(@car.afterburner,@time,@car.destroyed,@finishedText) 
   end
+
+  def finalize()
+    @car.finalize()
+    @rival.finalize()
+    @music.stop()
+  end
+
 end
 

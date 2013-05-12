@@ -27,5 +27,10 @@ def initialize(window,track)
     end
     @music.play
  end
+
+ def stop()
+   @music.stop()
+ end
+
 end
 

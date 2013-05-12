@@ -6,6 +6,9 @@ end
 def play(looping)
     @playing = @sound.play(1.0,1,looping)
 end
+def stop()
+  @playing.stop()
+end
 def setVolume(volume)
   @playing.volume = volume
 end

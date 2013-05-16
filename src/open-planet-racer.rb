@@ -3,6 +3,7 @@ require 'gosu'
 require 'chipmunk'
 require './Race/Race.rb'
 require './Intro/Intro.rb'
+require './MainMenu/MainMenu.rb'
 require './GameState.rb'
 
 include Gosu
@@ -20,28 +21,39 @@ class Game < Window
   end
 
   def update
-     if @gameState.stage == 0
+     case @gameState.stage
+     when 0
         @intro.update(self)
-     else
+     when 1
+        @mainMenu.update(self)
+     when 2
         @race.update(self)
      end
   end
 
   def draw
-     if @gameState.stage == 0
+     case @gameState.stage
+     when 0
         @intro.draw(self)
         if @intro.finished
           @intro = nil
           @gameState.stage += 1
+          @mainMenu = MainMenu.new(self)
+        end
+     when 1
+        @mainMenu.draw(self)
+        if @mainMenu.finished
+          @mainMenu = nil
+          @gameState.stage += 1
           @race = Race.new(self)
         end
-     else
+     when 2
         @race.draw(self)
         if @race.finished
           @race.finalize()
           @race = nil
           @gameState.stage -= 1
-          @intro = Intro.new(self)
+          @mainMenu = MainMenu.new(self)
         end
      end
   end

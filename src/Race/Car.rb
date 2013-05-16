@@ -118,6 +118,7 @@ def mute()
 end
 
 def accelerate(direction)
+if not @destroyed then
  @accelerating = true
  if @direction then
   if direction then
@@ -141,8 +142,10 @@ def accelerate(direction)
   end
  end
 end
+end
 
 def turn(direction)
+if not @destroyed then 
   @turning = true
   if direction then
     if @chasis.body.t > -@maxTorque then
@@ -153,6 +156,7 @@ def turn(direction)
       @chasis.body.t +=50
     end
   end
+end
 end
 
 def FireAfterburner()

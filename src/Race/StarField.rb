@@ -3,7 +3,7 @@ class StarField
 
    def initialize(window,screen_width,screen_height,levelLength,finishHeight)
      @starCount = Array.new(100) { Array.new(4) }
-     @planetCount = Array.new(20) { Array.new(4) }
+     @planetCount = Array.new(40) { Array.new(4) }
 
      @starCount.each do |star|
        star[0] = rand(screen_width)
@@ -13,8 +13,8 @@ class StarField
      end
  
      @planetCount.each do |planet|
-       planet[0] = rand(levelLength)
-       planet[1] = rand(finishHeight)
+       planet[0] = rand(levelLength+200)-200
+       planet[1] = rand(finishHeight+1000)-1000
        planet[2] = rand(3)+10
        planet[3] = rand(100)*0.01
      end

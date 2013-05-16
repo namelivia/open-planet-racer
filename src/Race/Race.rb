@@ -3,6 +3,7 @@ require './Race/Music.rb'
 require './Race/Level.rb'
 require './Race/CollisionHandler.rb'
 require './Race/UI.rb'
+require './Common/Menu.rb'
 
 class Race
 
@@ -25,7 +26,8 @@ class Race
     @userInterface = UI.new(window,@car.afterburner)
     @music = Music.new(window,rand(6))
     @finishSFX = SoundFX.new(window,"../media/sfx/finish.ogg")
-    
+    @pauseMenu = Menu.new(window,100,200,'Paused',['Resume','Exit'],38)   
+
     @dt = (1.0/60.0)
     @paused = false
     @lastPause = 0 
@@ -43,6 +45,7 @@ class Race
       @lastPause +=1
     end
 
+  if not @paused then
     if window.button_down? Gosu::Button::KbUp then
       @car.accelerate(true)
     elsif window.button_down? Gosu::Button::KbDown then
@@ -55,6 +58,22 @@ class Race
     end
     if window.button_down? Gosu::Button::KbSpace then
       @car.FireAfterburner()
+    end
+    else
+    @pauseMenu.update()
+    if window.button_down? Gosu::Button::KbUp then
+      @pauseMenu.prevOption()
+    elsif window.button_down? Gosu::Button::KbDown then
+      @pauseMenu.nextOption()
+    end
+    if window.button_down? Gosu::Button::KbSpace then
+      case @pauseMenu.selectedOption
+      when 0
+       @paused = !@paused
+      when 1
+        @finished = true
+      end
+    end
     end
     if window.button_down? Gosu::Button::KbEscape then
      if @lastPause == 10 then
@@ -138,7 +157,11 @@ class Race
     
     if @paused then
       pausecolor = Color.new(100,0,0,0)
-      window.draw_quad(0,0,pausecolor,0,SCREEN_HEIGHT,pausecolor,SCREEN_WIDTH,0,pausecolor,SCREEN_WIDTH,SCREEN_HEIGHT,pausecolor )
+      window.draw_quad(0,0,pausecolor,
+		       0,SCREEN_HEIGHT,pausecolor,
+                       SCREEN_WIDTH,0,pausecolor,
+                       SCREEN_WIDTH,SCREEN_HEIGHT,pausecolor)
+      @pauseMenu.draw(window)
     end
      @userInterface.draw(@car.afterburner,@time,@car.destroyed,@finishedText) 
   end

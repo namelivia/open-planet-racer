@@ -1,4 +1,4 @@
-require './MainMenu/Menu.rb'
+require './Common/Menu.rb'
 
 class MainMenu
 
@@ -6,21 +6,15 @@ class MainMenu
 
   def initialize(window)
     @finished = false
-    @menu = Menu.new(window,200,100)
-    @timeout = 0
+    @menu = Menu.new(window,220,100,'Main Menu',['New Race','Options','Credits','Exit'],80)
   end
 
   def update(window)
-    if @timeout > 0 then 
-      @timeout -= 1
-    else
+    @menu.update()
     if window.button_down? Gosu::Button::KbUp then
       @menu.prevOption()
-      @timeout = 20
     elsif window.button_down? Gosu::Button::KbDown then
       @menu.nextOption()
-      @timeout = 20
-    end
     end
     if window.button_down? Gosu::Button::KbSpace then
       case @menu.selectedOption
@@ -28,6 +22,7 @@ class MainMenu
         @finished = true
       when 1
       when 2
+      when 3
         exit
       end
     end

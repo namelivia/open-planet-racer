@@ -2,32 +2,42 @@ class Menu
 
   attr_accessor :selectedOption
 
-  def initialize(window,x,y)
+  def initialize(window,x,y,title,options,fontSize)
     @x = x
     @y = y
-    @title = 'Main Menu'
-    @options = ['New Race','Options','Exit']
+    @title = title
+    @options = options
     @maxLength = @options.group_by(&:size).max.last.first.length/2
-    @fontSize = 38
+    @fontSize = fontSize
     @font = Gosu::Font.new(window, "Arial", @fontSize)
     @selectedOption = 0
     @mainPadding = 10
+    @timeOut = 0
   end
 
-  def update(window)
+  def update()
+    if @timeOut < 20 then
+      @timeOut += 1
+    end
   end
 
   def nextOption()
+    if @timeOut == 20 then
     @selectedOption += 1
+    @timeOut = 0
     if @selectedOption>@options.length-1 then
       @selectedOption = 0
+    end
     end
   end
 
   def prevOption()
+    if @timeOut == 20 then
     @selectedOption -= 1
+    @timeOut = 0
     if @selectedOption<0 then
       @selectedOption = @options.length-1
+    end
     end
   end
 

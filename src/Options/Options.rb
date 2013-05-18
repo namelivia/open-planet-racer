@@ -1,13 +1,13 @@
 require './Common/Menu.rb'
 require './Race/Level.rb'
 
-class MainMenu
+class Options
 
   attr_accessor :finished
 
   def initialize(window)
     @finished = 0
-    @menu = Menu.new(window,220,100,'Main Menu',['New Race','Options','Credits','Exit'],80)
+    @menu = Menu.new(window,100,100,'Options',['Music Volume','Sound FX Volume','Back'],80)
     @space = CP::Space.new
     floorColor = Color.new(255,rand(155)+100,rand(155)+100,rand(155)+100)
     @level = Level.new(window,@space,100,200,floorColor)
@@ -15,7 +15,7 @@ class MainMenu
   end
 
   def update(window)
-    if @idleTime > 0 
+     if @idleTime > 0
        @idleTime -= 1
     end
     @menu.update()
@@ -27,13 +27,9 @@ class MainMenu
     if window.button_down? Gosu::Button::KbSpace and @idleTime == 0 then
       case @menu.selectedOption
       when 0
-        @finished = 4
       when 1
-        @finished = 2
       when 2
-        @finished = 3
-      when 3
-        exit
+        @finished = 1
       end
     end
   end

@@ -37,6 +37,7 @@ class Race
     @rivalTime = 20+rand(20)
     @rivalTeleported = false
     @finishedText = false
+    @finished = 0
   end
 
   def update(window)
@@ -71,7 +72,7 @@ class Race
       when 0
        @paused = !@paused
       when 1
-        @finished = true
+        @finished = 1
       end
     end
     end
@@ -105,7 +106,7 @@ class Race
     end
     end
     if @counter == 400
-      @finished = true
+      @finished = 1
     end
 
     completed = ((@car.position.x-300)/(@level.levelLength-230))*180

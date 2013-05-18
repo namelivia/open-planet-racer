@@ -6,7 +6,7 @@ class Intro
     @counter = 0
     @font = Gosu::Font.new(window, "Arial", 18)
     @titleImage = Image.new(window,"../media/gfx/title.png",true)
-    @finished = false;
+    @finished = 0;
   end
 
   def update(window)
@@ -16,7 +16,7 @@ class Intro
        @counter += 1
     end
     if @counter == 1000
-       @finished = true
+       @finished = 1
     end
   end
 

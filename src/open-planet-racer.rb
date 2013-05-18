@@ -3,6 +3,8 @@ require 'gosu'
 require 'chipmunk'
 require './Race/Race.rb'
 require './Intro/Intro.rb'
+require './Options/Options.rb'
+require './Credits/Credits.rb'
 require './MainMenu/MainMenu.rb'
 require './GameState.rb'
 
@@ -19,6 +21,23 @@ class Game < Window
     @gameState = GameState.new()
     @intro = Intro.new(self)
   end
+ 
+  def transition(currentScreen)
+    @gameState.stage = currentScreen.finished
+    currentScreen = nil
+    case @gameState.stage
+    when 0
+      @intro = Intro.new(self)
+    when 1
+      @mainMenu = MainMenu.new(self)
+    when 2
+      @options = Options.new(self)
+    when 3
+      @credits = Credits.new(self)
+    when 4
+      @race = Race.new(self)
+    end
+  end
 
   def update
      case @gameState.stage
@@ -27,6 +46,10 @@ class Game < Window
      when 1
         @mainMenu.update(self)
      when 2
+        @options.update(self)
+     when 3
+        @credits.update(self)
+     when 4
         @race.update(self)
      end
   end
@@ -35,25 +58,29 @@ class Game < Window
      case @gameState.stage
      when 0
         @intro.draw(self)
-        if @intro.finished
-          @intro = nil
-          @gameState.stage += 1
-          @mainMenu = MainMenu.new(self)
+        if @intro.finished != 0
+          transition(@intro)
         end
      when 1
         @mainMenu.draw(self)
-        if @mainMenu.finished
-          @mainMenu = nil
-          @gameState.stage += 1
-          @race = Race.new(self)
+        if @mainMenu.finished != 0
+          transition(@mainMenu)
         end
      when 2
+        @options.draw(self)
+        if @options.finished != 0
+          transition(@options)
+        end
+     when 3
+        @credits.draw(self)
+        if @credits.finished != 0
+          transition(@credits)
+        end
+     when 4
         @race.draw(self)
-        if @race.finished
+        if @race.finished != 0
           @race.finalize()
-          @race = nil
-          @gameState.stage -= 1
-          @mainMenu = MainMenu.new(self)
+          transition(@race)
         end
      end
   end

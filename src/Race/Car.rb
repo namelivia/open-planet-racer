@@ -10,7 +10,7 @@ class Car
    attr_accessor :destroyed
    attr_accessor :life
 
-def initialize(window,space,initialPosition,direction)
+def initialize(window,space,initialPosition,direction,optionsVolume)
 
   @direction = direction
   @maxSpeed = 3.0
@@ -24,11 +24,11 @@ def initialize(window,space,initialPosition,direction)
   @turning = false
   @afterburnerOn = false 
   @engineVolume = 0
-  @engineSFX = SoundFX.new(window,"../media/sfx/engine.ogg")
+  @engineSFX = SoundFX.new(window,"../media/sfx/engine.ogg",optionsVolume)
   @engineSFX.play(true)
   @engineSFX.setVolume(0)
-  @explosionSFX = SoundFX.new(window,"../media/sfx/explosion.ogg")
-  @rocketSFX = SoundFX.new(window,"../media/sfx/rocket.ogg")
+  @explosionSFX = SoundFX.new(window,"../media/sfx/explosion.ogg",optionsVolume)
+  @rocketSFX = SoundFX.new(window,"../media/sfx/rocket.ogg",optionsVolume)
   @rocketSFX.play(true)
   @rocketSFX.setVolume(0)
   @chasis = create_chasis(window,space,initialPosition,@direction)

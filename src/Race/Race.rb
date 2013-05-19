@@ -10,23 +10,26 @@ class Race
   attr_accessor :finished
   SUBSTEPS = 10
 
-  def initialize(window)
+  def initialize(window,soundOptions)
+    @soundOptions = soundOptions
     @space = CP::Space.new
     @space.gravity = CP::Vec2.new(0,rand(10)+2)
     floorColor = Color.new(255,rand(155)+100,rand(155)+100,rand(155)+100)
     @level = Level.new(window,@space,100,200,floorColor)
     initialPosition = CP::Vec2.new(80,200)
-    @car = Car.new(window,@space,initialPosition,true)
+    @car = Car.new(window,@space,initialPosition,true,soundOptions.soundFXVolume)
     rivalInitialPosition = CP::Vec2.new(-80,200)
-    @rival = Car.new(window,@space,rivalInitialPosition,false)
-    @space.add_collision_handler(:chasis,:floor,CollisionHandler.new(window,@car,0)) 
-    @space.add_collision_handler(:wheel,:floor,CollisionHandler.new(window,@car,1)) 
-    @space.add_collision_handler(:bigWheel,:floor,CollisionHandler.new(window,@car,2)) 
+    @rival = Car.new(window,@space,rivalInitialPosition,false,soundOptions.soundFXVolume)
+    @space.add_collision_handler(:chasis,:floor,CollisionHandler.new(window,@car,0,soundOptions.soundFXVolume)) 
+    @space.add_collision_handler(:wheel,:floor,CollisionHandler.new(window,@car,1,soundOptions.soundFXVolume)) 
+    @space.add_collision_handler(:bigWheel,:floor,CollisionHandler.new(window,@car,2,soundOptions.soundFXVolume)) 
     
     @userInterface = UI.new(window,@car.afterburner)
-    @music = Music.new(window,rand(6))
-    @finishSFX = SoundFX.new(window,"../media/sfx/finish.ogg")
-    @pauseMenu = Menu.new(window,100,200,'Paused',['Resume','Exit'],38)   
+    @music = Music.new(window,rand(6),soundOptions.musicVolume)
+    @finishSFX = SoundFX.new(window,"../media/sfx/finish.ogg",soundOptions.soundFXVolume)
+    @pauseMenu = Menu.new(window,100,200,'Paused',38)   
+    @pauseMenu.addItem('Resume',-1)
+    @pauseMenu.addItem('Exit',-1)
 
     @dt = (1.0/60.0)
     @paused = false

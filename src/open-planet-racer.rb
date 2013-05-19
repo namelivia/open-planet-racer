@@ -4,6 +4,7 @@ require 'chipmunk'
 require './Race/Race.rb'
 require './Intro/Intro.rb'
 require './Options/Options.rb'
+require './SoundOptions.rb'
 require './Credits/Credits.rb'
 require './MainMenu/MainMenu.rb'
 require './GameState.rb'
@@ -18,6 +19,7 @@ class Game < Window
   def initialize
     super(SCREEN_WIDTH, SCREEN_HEIGHT, false)
     self.caption = "Planet Racer"
+    @soundOptions = SoundOptions.new()
     @gameState = GameState.new()
     @intro = Intro.new(self)
   end
@@ -31,11 +33,11 @@ class Game < Window
     when 1
       @mainMenu = MainMenu.new(self)
     when 2
-      @options = Options.new(self)
+      @options = Options.new(self,@soundOptions)
     when 3
       @credits = Credits.new(self)
     when 4
-      @race = Race.new(self)
+      @race = Race.new(self,@soundOptions)
     end
   end
 

@@ -1,7 +1,8 @@
 class Music
  attr_accessor :title
 
-def initialize(window,track)
+def initialize(window,track,optionsVolume)
+   @optionsVolume = optionsVolume
    case track
     when 0 then
       @music = Gosu::Song.new(window, "../media/music/song.ogg")
@@ -26,6 +27,7 @@ def initialize(window,track)
       @title = "THNS by Paskine"
     end
     @music.play
+    @music.volume = optionsVolume
  end
 
  def stop()

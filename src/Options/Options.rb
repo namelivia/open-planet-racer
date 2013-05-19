@@ -5,9 +5,12 @@ class Options
 
   attr_accessor :finished
 
-  def initialize(window)
+  def initialize(window,soundOptions)
     @finished = 0
-    @menu = Menu.new(window,100,100,'Options',['Music Volume','Sound FX Volume','Back'],80)
+    @menu = Menu.new(window,100,100,'Options',80)
+    @menu.addItem('Music Volume',soundOptions.musicVolume)
+    @menu.addItem('Sound FX Volume',soundOptions.soundFXVolume)
+    @menu.addItem('Back',-1)
     @space = CP::Space.new
     floorColor = Color.new(255,rand(155)+100,rand(155)+100,rand(155)+100)
     @level = Level.new(window,@space,100,200,floorColor)

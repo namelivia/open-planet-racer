@@ -7,7 +7,13 @@ class MainMenu
 
   def initialize(window)
     @finished = 0
-    @menu = Menu.new(window,220,100,'Main Menu',['New Race','Options','Credits','Exit'],80)
+    
+    @menu = Menu.new(window,220,100,'Main Menu',80)
+    @menu.addItem('New Race',-1)   
+    @menu.addItem('Options',-1)   
+    @menu.addItem('Credits',-1)   
+    @menu.addItem('Exit',-1)   
+
     @space = CP::Space.new
     floorColor = Color.new(255,rand(155)+100,rand(155)+100,rand(155)+100)
     @level = Level.new(window,@space,100,200,floorColor)

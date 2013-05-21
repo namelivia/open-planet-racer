@@ -1,19 +1,33 @@
 require './Common/Menu.rb'
 require './Race/Level.rb'
 
+
+#States:
+# 0 - Main Menu
+# 1 - Options
+# 2 - Credits
+
 class MainMenu
 
   attr_accessor :finished
 
-  def initialize(window)
+  def initialize(window,soundOptions)
     @finished = 0
-    
+    @state = 0 
     @menu = Menu.new(window,220,100,'Main Menu',80)
     @menu.addItem('New Race',-1)   
     @menu.addItem('Options',-1)   
     @menu.addItem('Credits',-1)   
     @menu.addItem('Exit',-1)   
 
+    @optionsMenu = Menu.new(window,100,100,'Options',80)
+    @optionsMenu.addItem('Music Volume',soundOptions.musicVolume)
+    @optionsMenu.addItem('Sound FX Volume',soundOptions.soundFXVolume)
+    @optionsMenu.addItem('Back',-1)
+
+    @credits = Menu.new(window,100,100,'Credits',80)
+    @credits.addItem('Back',-1)
+    
     @space = CP::Space.new
     floorColor = Color.new(255,rand(155)+100,rand(155)+100,rand(155)+100)
     @level = Level.new(window,@space,100,200,floorColor)
@@ -24,22 +38,56 @@ class MainMenu
     if @idleTime > 0 
        @idleTime -= 1
     end
-    @menu.update()
+    case @state
+      when 0
+        @menu.update()
+      when 1
+        @optionsMenu.update()
+      when 2
+      end
     if window.button_down? Gosu::Button::KbUp then
-      @menu.prevOption()
+      case @state
+        when 0
+          @menu.prevOption()
+        when 1
+          @optionsMenu.prevOption()
+        end
     elsif window.button_down? Gosu::Button::KbDown then
-      @menu.nextOption()
+      case @state
+        when 0
+          @menu.nextOption()
+        when 1
+          @optionsMenu.nextOption()
+        end
     end
     if window.button_down? Gosu::Button::KbSpace and @idleTime == 0 then
-      case @menu.selectedOption
+    case @state
       when 0
-        @finished = 4
+      case @menu.selectedOption
+        when 0
+          @finished = 2
+        when 1
+          @idleTime = 50
+          @state = 1
+        when 2
+          @idleTime = 50
+          @state = 2
+        when 3
+          exit
+        end
       when 1
-        @finished = 2
+      case @optionsMenu.selectedOption
+        when 0
+        when 1
+        when 2
+        when 3
+        when 4
+          @idleTime = 50
+          @state = 0
+        end
       when 2
-        @finished = 3
-      when 3
-        exit
+        @idleTime = 50
+        @state = 0
       end
     end
   end
@@ -64,7 +112,14 @@ class MainMenu
       @level.draw(window,500,0,SCREEN_HEIGHT,color3)
       color = Color.new(0,0,0,255)
       window.draw_quad(0,0,color,0,SCREEN_HEIGHT,color,SCREEN_WIDTH,0,color,SCREEN_WIDTH,SCREEN_HEIGHT,color)
-      @menu.draw(window)
+      case @state
+      when 0
+        @menu.draw(window)
+      when 1
+        @optionsMenu.draw(window)
+      when 2
+        @credits.draw(window)
+      end
   end
 end
 

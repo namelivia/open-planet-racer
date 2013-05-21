@@ -3,9 +3,7 @@ require 'gosu'
 require 'chipmunk'
 require './Race/Race.rb'
 require './Intro/Intro.rb'
-require './Options/Options.rb'
 require './SoundOptions.rb'
-require './Credits/Credits.rb'
 require './MainMenu/MainMenu.rb'
 require './GameState.rb'
 
@@ -31,12 +29,8 @@ class Game < Window
     when 0
       @intro = Intro.new(self)
     when 1
-      @mainMenu = MainMenu.new(self)
+      @mainMenu = MainMenu.new(self,@soundOptions)
     when 2
-      @options = Options.new(self,@soundOptions)
-    when 3
-      @credits = Credits.new(self)
-    when 4
       @race = Race.new(self,@soundOptions)
     end
   end
@@ -48,10 +42,6 @@ class Game < Window
      when 1
         @mainMenu.update(self)
      when 2
-        @options.update(self)
-     when 3
-        @credits.update(self)
-     when 4
         @race.update(self)
      end
   end
@@ -69,16 +59,6 @@ class Game < Window
           transition(@mainMenu)
         end
      when 2
-        @options.draw(self)
-        if @options.finished != 0
-          transition(@options)
-        end
-     when 3
-        @credits.draw(self)
-        if @credits.finished != 0
-          transition(@credits)
-        end
-     when 4
         @race.draw(self)
         if @race.finished != 0
           @race.finalize()

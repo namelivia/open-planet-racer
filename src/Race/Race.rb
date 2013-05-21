@@ -121,7 +121,7 @@ class Race
     end
     if @time>@rivalTime and not @rivalTeleported then
     newPosition = CP::Vec2.new(@level.levelLength+600,@level.finishHeight-200)
-    @rival = Car.new(window,@space,newPosition,false)
+    @rival = Car.new(window,@space,newPosition,false,soundOptions.soundFXVolume)
     @rivalTeleported = true
     end 
     if @rivalTeleported then

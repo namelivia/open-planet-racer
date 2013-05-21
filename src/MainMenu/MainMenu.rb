@@ -1,4 +1,5 @@
 require './Common/Menu.rb'
+require './Common/ScrollingText.rb'
 require './Race/Level.rb'
 
 
@@ -25,8 +26,7 @@ class MainMenu
     @optionsMenu.addItem('Sound FX Volume',soundOptions.soundFXVolume)
     @optionsMenu.addItem('Back',-1)
 
-    @credits = Menu.new(window,100,100,'Credits',80)
-    @credits.addItem('Back',-1)
+    @credits = ScrollingText.new(window,100,'Credits',80)
     
     @space = CP::Space.new
     floorColor = Color.new(255,rand(155)+100,rand(155)+100,rand(155)+100)
@@ -44,6 +44,7 @@ class MainMenu
       when 1
         @optionsMenu.update()
       when 2
+        @credits.update()
       end
     if window.button_down? Gosu::Button::KbUp then
       case @state
@@ -71,6 +72,7 @@ class MainMenu
           @state = 1
         when 2
           @idleTime = 50
+          @credits.reset()
           @state = 2
         when 3
           exit

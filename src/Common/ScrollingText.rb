@@ -16,7 +16,8 @@ class ScrollingText
   end
 
   def draw(window)
-      @font.draw(@text, @x, @y, 1.0, 1.0, 1.0)
+    File.readlines(@text).each_with_index do |line,i|
+      @font.draw(line.chomp, @x, @y+@fontSize*i, 1.0, 1.0, 1.0)
+    end
   end
-
 end

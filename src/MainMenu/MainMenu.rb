@@ -26,7 +26,7 @@ class MainMenu
     @optionsMenu.addItem('Sound FX Volume',soundOptions.soundFXVolume)
     @optionsMenu.addItem('Back',-1)
 
-    @credits = ScrollingText.new(window,100,'Credits',80)
+    @credits = ScrollingText.new(window,100,'../Credits',50)
     
     @space = CP::Space.new
     floorColor = Color.new(255,rand(155)+100,rand(155)+100,rand(155)+100)

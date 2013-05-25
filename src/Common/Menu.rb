@@ -1,3 +1,5 @@
+require './Common/Slider.rb'
+
 class Menu
 
   attr_accessor :selectedOption
@@ -13,6 +15,7 @@ class Menu
     @selectedOption = 0
     @mainPadding = 10
     @timeOut = 0
+    @slider = Slider.new(50)
   end
 
   def addItem(name,value)
@@ -76,6 +79,7 @@ class Menu
         else
 	  @font.draw(option,@x,@y+((i+1)*@fontSize), 1.0, 1.0, 1.0)
         end
+        @slider.draw(window,@x,@y+((i+1)*@fontSize),@maxLength*@fontSize,@fontSize)
       end
   end
 

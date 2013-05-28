@@ -1,4 +1,4 @@
-class Slider
+class Slider < MenuItem
 
   attr_accessor :value
 

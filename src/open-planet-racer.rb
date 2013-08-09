@@ -11,6 +11,7 @@ include Gosu
 
 SCREEN_WIDTH = 800
 SCREEN_HEIGHT = 600
+IDLE_TIME = 30
 
 class Game < Window
 

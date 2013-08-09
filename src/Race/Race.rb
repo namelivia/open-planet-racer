@@ -11,9 +11,11 @@ class Race
   SUBSTEPS = 10
 
   def initialize(window,soundOptions)
+    
+    @font = Gosu::Font.new(window, "Arial", 25)
     @soundOptions = soundOptions
     @space = CP::Space.new
-    @space.gravity = CP::Vec2.new(0,rand(10)+2)
+    @space.gravity = CP::Vec2.new(0,(rand(100)+20)/10)
     floorColor = Color.new(255,rand(155)+100,rand(155)+100,rand(155)+100)
     @level = Level.new(window,@space,100,200,floorColor)
     initialPosition = CP::Vec2.new(80,200)
@@ -39,12 +41,30 @@ class Race
     @counter = 0
     @time = 0
     @rivalTime = 20+rand(20)
+    @temperature = 50-rand(100)
+    @rivalName = (0...8).map{(65+rand(26)).chr}.join
+    @planetName = (0...3).map{(65+rand(26)).chr}.join
     @rivalTeleported = false
     @finishedText = false
     @finished = 0
+    @intro = true
   end
 
   def update(window)
+
+  ##############################
+  # RACE INFO
+  ##############################
+  if @intro then
+    @counter += 1
+    if @counter > 350 then
+      @intro = false
+      @counter = 0
+    end
+  else
+  ##############################
+  # RACE
+  ##############################
 
     if @lastPause < 10 then
       @lastPause +=1
@@ -129,8 +149,20 @@ class Race
       @rival.accelerate(true)
     end
   end
+  end
 
   def draw(window)
+
+
+    if @intro then
+      color = Color.new(0,0,0,255)
+      window.draw_quad(0,0,color,0,SCREEN_HEIGHT,color,SCREEN_WIDTH,0,color,SCREEN_WIDTH,SCREEN_HEIGHT,color)
+      @font.draw("Planet: #{@planetName}", 300, 200, 1.0, 1.0, 1.0)
+      @font.draw("Gravity: #{@space.gravity.y} m/s²", 300, 230, 1.0, 1.0, 1.0)
+      @font.draw("Temperature: #{@temperature} º", 300, 260, 1.0, 1.0, 1.0)
+      @font.draw("Rival: #{@rivalName}", 300, 290, 1.0, 1.0, 1.0)
+      @font.draw("Time: #{@rivalTime}", 300, 320, 1.0, 1.0, 1.0)
+    else
 
     limit = 0
     size = 9
@@ -154,11 +186,12 @@ class Race
        @car.destroy(@space)
     end
 
-    if @car.position.x > @level.levelLength and not @finishedText then
-      @finishedText = true
-      @finishSFX.play(false)
-      @car.finish()
-    end
+    #This shouldn't be here...
+    #if @car.position.x > @level.levelLength and not @finishedText then
+    #  @finishedText = true
+    #  @finishSFX.play(false)
+    #  @car.finish()
+    #end
     
     if @paused then
       pausecolor = Color.new(100,0,0,0)
@@ -169,6 +202,7 @@ class Race
       @pauseMenu.draw(window)
     end
      @userInterface.draw(@car.afterburner,@time,@car.destroyed,@finishedText) 
+    end
   end
 
   def finalize()

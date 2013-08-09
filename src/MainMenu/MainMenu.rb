@@ -29,7 +29,7 @@ class MainMenu
 
     @credits = ScrollingText.new(window,100,'../Credits',50)
     
-    @idleTime = 50
+    @idleTime = IDLE_TIME
   end
 
   def update(window)
@@ -68,10 +68,10 @@ class MainMenu
         when 1
           @finished = 2
         when 2
-          @idleTime = 50
+          @idleTime = IDLE_TIME
           @state = 2
         when 3
-          @idleTime = 50
+          @idleTime = IDLE_TIME
           @credits.reset()
           @state = 3
         when 4
@@ -80,11 +80,11 @@ class MainMenu
       when 2
       case @optionsMenu.selectedOption
         when 2
-          @idleTime = 50
+          @idleTime = IDLE_TIME
           @state = 0
         end
       when 3
-         @idleTime = 50
+         @idleTime = IDLE_TIME
          @state = 0
       end
       end

@@ -7,16 +7,20 @@ class Intro
     @font = Gosu::Font.new(window, "Arial", 18)
     @titleImage = Image.new(window,"../media/gfx/title.png",true)
     @finished = 0;
+    @idleTime = 0;
   end
 
   def update(window)
-    if window.button_down? Gosu::Button::KbEscape then
-       @counter = 1000
-    else
-       @counter += 1
-    end
-    if @counter == 1000
-       @finished = 1
+      @counter += 1
+      if @idleTime < IDLE_TIME then
+        @idleTime += 1
+      end 
+      if window.button_down? Gosu::Button::KbSpace and @idleTime == IDLE_TIME then
+         @counter  += 500
+         @idleTime = 0
+      if @counter > 1000
+         @finished = 1
+      end
     end
   end
 

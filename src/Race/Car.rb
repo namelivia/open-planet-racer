@@ -226,7 +226,9 @@ def create_chasis(window,space,initialPosition,direction)
        shape = CP::Shape::Poly.new(body, chasis_vertices, CP::Vec2.new(0, 0))
        shape.e = 0.5
        shape.u = 0.4
-       shape.collision_type = :chasis
+       if direction then 
+          shape.collision_type = :chasis
+       end
        chasis = CarPart.new(chasis_image, body)
        space.add_body(body)
        space.add_shape(shape)
@@ -255,7 +257,9 @@ def create_chasis(window,space,initialPosition,direction)
        shape = CP::Shape::Circle.new(body,16, CP::Vec2.new(0, 0))
        shape.e = 0.4
        shape.u = 1
-       shape.collision_type = :wheel
+       if direction then 
+          shape.collision_type = :wheel
+       end
        wheel = CarPart.new(wheel_image, body)
        space.add_body(body)
        space.add_shape(shape)
@@ -276,7 +280,9 @@ def create_chasis(window,space,initialPosition,direction)
        shape = CP::Shape::Circle.new(body,25, CP::Vec2.new(0, 0))
        shape.e = 0.4
        shape.u = 1
-       shape.collision_type = :bigWheel
+       if direction then 
+          shape.collision_type = :bigWheel
+       end
        bigWheel = CarPart.new(bigWheel_image, body)
        space.add_body(body)
        space.add_shape(shape)

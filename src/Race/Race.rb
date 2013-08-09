@@ -20,6 +20,7 @@ class Race
     @car = Car.new(window,@space,initialPosition,true,soundOptions.soundFXVolume)
     rivalInitialPosition = CP::Vec2.new(-80,200)
     @rival = Car.new(window,@space,rivalInitialPosition,false,soundOptions.soundFXVolume)
+
     @space.add_collision_handler(:chasis,:floor,CollisionHandler.new(window,@car,0,soundOptions.soundFXVolume)) 
     @space.add_collision_handler(:wheel,:floor,CollisionHandler.new(window,@car,1,soundOptions.soundFXVolume)) 
     @space.add_collision_handler(:bigWheel,:floor,CollisionHandler.new(window,@car,2,soundOptions.soundFXVolume)) 

@@ -10,13 +10,18 @@ class Menu
     @title = title
     @items = []
     @font = Gosu::Font.new(window, "Arial",fontSize)
+    @Smallfont = Gosu::Font.new(window, "Arial",fontSize/2)
     @selectedOption = 0
     @mainPadding = 10
     @timeOut = 0
   end
 
   def addItem(name,value)
-    newItem = TextItem.new(name,@items.length+1)
+    if (value == -1)  then
+      newItem = TextItem.new(name,@items.length+1)
+    else
+      newItem = TextItem.new(name+" : "+value.to_s,@items.length+1)
+    end 
     @items.push(newItem)
     @maxLength = @items.map(&:text).group_by(&:size).max.last.first.length/2
   end

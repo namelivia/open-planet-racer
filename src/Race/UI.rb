@@ -13,16 +13,18 @@ class UI
     @minimap.update(completed,rival)
   end
 
-  def draw(afterburner,time,destroyed,finished)
+  def draw(afterburner,time,destroyed,state)
     @powerbar.draw(afterburner)
     @font.draw("<c=ffff00>#{'%.2f' % time}</c>",50,100,1.0,1.0,1.0)
     @minimap.draw(20,52)
-    if finished then
-      @noticeFont.draw("Finished!",SCREEN_WIDTH/2-100,SCREEN_HEIGHT/2,1.0,1.0,1.0)
-    elsif  destroyed then
-      @noticeFont.draw("Destroyed!",SCREEN_WIDTH/2-100,SCREEN_HEIGHT/2,1.0,1.0,1.0)
+    if state == 2 then
+      if  destroyed then
+        @noticeFont.draw("Destroyed!",SCREEN_WIDTH/2-100,SCREEN_HEIGHT/2,1.0,1.0,1.0)
+      else
+        @noticeFont.draw("Finished!",SCREEN_WIDTH/2-100,SCREEN_HEIGHT/2,1.0,1.0,1.0)
+        @noticeFont.draw("Time: #{'%.2f' % time}",SCREEN_WIDTH/2-150,SCREEN_HEIGHT/2+100,1.0,1.0,1.0)
+      end
     end
   end
-
 end
 

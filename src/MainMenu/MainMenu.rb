@@ -22,7 +22,7 @@ class MainMenu
     @menu.addItem('Credits',-1)   
     @menu.addItem('Exit',-1)   
 
-    @optionsMenu = Menu.new(window,100,100,'Options',80)
+    @optionsMenu = Menu.new(window,100,100,'Options',50)
     @optionsMenu.addItem('Music Volume',soundOptions.musicVolume)
     @optionsMenu.addItem('Sound FX Volume',soundOptions.soundFXVolume)
     @optionsMenu.addItem('Back',-1)
@@ -44,6 +44,25 @@ class MainMenu
       when 3
         @credits.update()
       end
+
+    if window.button_down? Gosu::Button::KbLeft and @state == 2 then
+      case @optionsMenu.selectedOption
+        when 0
+          @state = 0
+        when 1
+          @state = 0
+      end
+    else
+    if window.button_down? Gosu::Button::KbRight and @state == 2 then
+      case @optionsMenu.selectedOption
+        when 0
+          @state = 0
+        when 1
+          @state = 0
+      end
+    end
+    end
+
     if window.button_down? Gosu::Button::KbUp then
       case @state
         when 0

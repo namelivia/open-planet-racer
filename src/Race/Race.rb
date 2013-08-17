@@ -43,7 +43,8 @@ class Race
     @rivalTeleported = false
     @rivalTime = 20+rand(20)
     @rivalName = (0...8).map{(65+rand(26)).chr}.join
-    
+    @rivalPortrait = Image.new(window,"../media/gfx/alienPortrait.png",true)
+  
     #User Interface 
     @font = Gosu::Font.new(window, "Arial", 25)
     @userInterface = UI.new(window,@car.afterburner)
@@ -193,11 +194,13 @@ class Race
     @level.draw(window,@scroll_x,@scroll_y,SCREEN_HEIGHT,color3)
     
     if @state == 0 then
-      @font.draw("Planet: #{@planetName}", 300, 200, 1.0, 1.0, 1.0)
-      @font.draw("Gravity: #{@space.gravity.y} m/s²", 300, 230, 1.0, 1.0, 1.0)
-      @font.draw("Temperature: #{@temperature} º", 300, 260, 1.0, 1.0, 1.0)
-      @font.draw("Rival: #{@rivalName}", 300, 290, 1.0, 1.0, 1.0)
-      @font.draw("Time: #{@rivalTime} s", 300, 320, 1.0, 1.0, 1.0)
+      @rivalPortrait.draw(12,12,0)
+      @font.draw("Planet: #{@planetName}", 280, 12, 1.0, 1.0, 1.0)
+      @font.draw("Gravity: #{@space.gravity.y} m/s²", 280, 42, 1.0, 1.0, 1.0)
+      @font.draw("Temperature: #{@temperature} º", 280, 73, 1.0, 1.0, 1.0)
+      @font.draw("Rival: #{@rivalName}", 280, 103, 1.0, 1.0, 1.0)
+      @font.draw("Time: #{@rivalTime} s", 280, 133, 1.0, 1.0, 1.0)
+      @font.draw("\"Despicable lifeform, you can't beat me!\"", 12, 273, 1.0, 1.0, 1.0)
     else
 
     @car.draw(window,@scroll_x,@scroll_y)

@@ -23,8 +23,8 @@ class MainMenu
     @menu.addItem('Exit',-1)   
 
     @optionsMenu = Menu.new(window,100,100,'Options',50)
-    @optionsMenu.addItem('Music Volume',soundOptions.musicVolume)
-    @optionsMenu.addItem('Sound FX Volume',soundOptions.soundFXVolume)
+    @optionsMenu.addItem('Music Volume',soundOptions.musicVolume*100)
+    @optionsMenu.addItem('Sound FX Volume',soundOptions.soundFXVolume*100)
     @optionsMenu.addItem('Back',-1)
 
     @credits = ScrollingText.new(window,100,'../Credits',50)
@@ -46,20 +46,10 @@ class MainMenu
       end
 
     if window.button_down? Gosu::Button::KbLeft and @state == 2 then
-      case @optionsMenu.selectedOption
-        when 0
-          @state = 0
-        when 1
-          @state = 0
-      end
+      @optionsMenu.decValue()
     else
     if window.button_down? Gosu::Button::KbRight and @state == 2 then
-      case @optionsMenu.selectedOption
-        when 0
-          @state = 0
-        when 1
-          @state = 0
-      end
+      @optionsMenu.incValue()
     end
     end
 
@@ -102,9 +92,6 @@ class MainMenu
           @idleTime = IDLE_TIME
           @state = 0
         end
-      when 3
-         @idleTime = IDLE_TIME
-         @state = 0
       end
       end
   end

@@ -18,37 +18,51 @@ class Menu
 
   def addItem(name,value)
     if (value == -1)  then
-      newItem = TextItem.new(name,@items.length+1)
+      newItem = TextItem.new(name,@items.length+1,value)
     else
-      newItem = TextItem.new(name+" : "+value.to_s,@items.length+1)
+      newItem = TextItem.new(name,@items.length+1,value)
     end 
     @items.push(newItem)
     @maxLength = @items.map(&:text).group_by(&:size).max.last.first.length/2
   end
 
   def update()
-    if @timeOut < 20 then
+    if @timeOut < IDLE_TIME then
       @timeOut += 1
     end
   end
+ 
+  def incValue()
+    if @timeOut == IDLE_TIME then
+      @items[@selectedOption].value += 1
+      @timeOut = 0
+    end
+  end
 
+  def decValue()
+    if @timeOut == IDLE_TIME then
+      @items[@selectedOption].value -= 1
+      @timeOut = 0
+    end
+  end
+  
   def nextOption()
-    if @timeOut == 20 then
+    if @timeOut == IDLE_TIME then
     @selectedOption += 1
     @timeOut = 0
-    if @selectedOption>@items.length-1 then
-      @selectedOption = 0
-    end
+      if @selectedOption>@items.length-1 then
+        @selectedOption = 0
+      end
     end
   end
 
   def prevOption()
-    if @timeOut == 20 then
+    if @timeOut == IDLE_TIME then
     @selectedOption -= 1
     @timeOut = 0
-    if @selectedOption<0 then
-      @selectedOption = @items.length-1
-    end
+      if @selectedOption<0 then
+        @selectedOption = @items.length-1
+      end
     end
   end
 

@@ -24,7 +24,7 @@ class Race
     #Sound
     @soundOptions = soundOptions
     @finishSFX = SoundFX.new(window,"../media/sfx/finish.ogg",soundOptions.soundFXVolume)
-    @music = Music.new(window,rand(6),soundOptions.musicVolume)
+    @music = Music.new(window,rand(6)+1,soundOptions.musicVolume)
 
     #Level
     @space = CP::Space.new

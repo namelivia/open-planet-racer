@@ -30,6 +30,8 @@ class MainMenu
     @credits = ScrollingText.new(window,100,'../Credits',50)
     
     @idleTime = IDLE_TIME
+    @music = Music.new(window,rand(6)+1,soundOptions.musicVolume)
+
   end
 
   def update(window)
@@ -92,6 +94,9 @@ class MainMenu
           @idleTime = IDLE_TIME
           @state = 0
         end
+      when 3
+        @idleTime = IDLE_TIME
+        @state = 0
       end
       end
   end

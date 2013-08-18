@@ -20,7 +20,7 @@ class Game < Window
     self.caption = "Planet Racer"
     @soundOptions = SoundOptions.new()
     @gameState = GameState.new()
-    @intro = Intro.new(self)
+    @intro = Intro.new(self,@soundOptions)
   end
  
   def transition(currentScreen)
@@ -28,7 +28,7 @@ class Game < Window
     currentScreen = nil
     case @gameState.stage
     when 0
-      @intro = Intro.new(self)
+      @intro = Intro.new(self,@soundOptions)
     when 1
       @mainMenu = MainMenu.new(self,@soundOptions)
     when 2

@@ -4,9 +4,6 @@ class Music
 def initialize(window,track,optionsVolume)
    @optionsVolume = optionsVolume
    case track
-    when 0 then
-      @music = Gosu::Song.new(window, "../media/music/song.ogg")
-      @title = "Space by MattIceMan"
     when 1 then
       @music = Gosu::Song.new(window, "../media/music/song2.ogg")
       @title = "Ambient Electronic by MaximusPryme274"
@@ -25,6 +22,9 @@ def initialize(window,track,optionsVolume)
     when 6 then
       @music = Gosu::Song.new(window, "../media/music/song7.ogg")
       @title = "THNS by Paskine"
+    when 7 then
+      @music = Gosu::Song.new(window, "../media/music/song8.ogg")
+      @title = "Space theme by Alexandr Zhelanov"
     end
     @music.play
     @music.volume = optionsVolume

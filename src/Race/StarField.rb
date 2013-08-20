@@ -3,7 +3,6 @@ class StarField
 
    def initialize(window,screen_width,screen_height,levelLength,finishHeight)
      @starCount = Array.new(100) { Array.new(4) }
-     @planetCount = Array.new(40) { Array.new(4) }
 
      @starCount.each do |star|
        star[0] = rand(screen_width)
@@ -11,15 +10,6 @@ class StarField
        star[2] = rand(3)+10
        star[3] = rand(40)+215
      end
- 
-     @planetCount.each do |planet|
-       planet[0] = rand(levelLength+200)-200
-       planet[1] = rand(finishHeight+1000)-1000
-       planet[2] = rand(3)+10
-       planet[3] = rand(100)*0.01
-     end
-   
-     @moonSprite = Image.new(window,"../media/gfx/moon.png",true) 
    end
 
    def draw(window,scroll_x,scroll_y)
@@ -30,10 +20,6 @@ class StarField
 	    starColor = Color.new(255,255,255,star[3])
          end
          window.draw_line((star[0]-scroll_x/star[2])%SCREEN_WIDTH,(star[1]-scroll_y/star[2])%SCREEN_HEIGHT,starColor,(star[0]-scroll_x/star[2])%SCREEN_WIDTH+1,(star[1]-scroll_y/star[2])%SCREEN_HEIGHT,starColor)
-       end
-
-       @planetCount.each do |planet|
-         @moonSprite.draw(planet[0]-scroll_x/planet[2],planet[1]-scroll_y/planet[2],0,planet[3],planet[3])
        end
    end
 

@@ -4,6 +4,7 @@ require './Race/Level.rb'
 require './Race/CollisionHandler.rb'
 require './Race/UI.rb'
 require './Common/Menu.rb'
+require './Common/RandomName.rb'
 
 class Race
 
@@ -32,7 +33,7 @@ class Race
     floorColor = Color.new(255,rand(155)+100,rand(155)+100,rand(155)+100)
     @level = Level.new(window,@space,100,200,floorColor)
     @temperature = 50-rand(100)
-    @planetName = (0...3).map{(65+rand(26)).chr}.join
+    @planetName = RandomName.new.getRandomName()
     @scroll_x = @scroll_y = 0
     
     #Cars
@@ -42,7 +43,7 @@ class Race
     @rival = Car.new(window,@space,rivalInitialPosition,false,soundOptions.soundFXVolume)
     @rivalTeleported = false
     @rivalTime = 20+rand(20)
-    @rivalName = (0...8).map{(65+rand(26)).chr}.join
+    @rivalName = RandomName.new.getRandomName()
     @rivalPortrait = Image.new(window,"../media/gfx/alienPortrait.png",true)
   
     #User Interface 

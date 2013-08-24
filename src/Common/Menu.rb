@@ -4,7 +4,7 @@ class Menu
 
   attr_accessor :selectedOption
 
-  def initialize(window,x,y,title,fontSize)
+  def initialize(window,x,y,title,fontSize,soundOptions)
     @x = x
     @y = y
     @title = title
@@ -14,6 +14,7 @@ class Menu
     @selectedOption = 0
     @mainPadding = 10
     @timeOut = 0
+    @soundFX = SoundFX.new(window,"../media/sfx/cursorMove.ogg",soundOptions.soundFXVolume)
   end
 
   def addItem(name,value)
@@ -36,6 +37,7 @@ class Menu
     if @timeOut == IDLE_TIME then
       @items[@selectedOption].value += 1
       @timeOut = 0
+      @soundFX.play(false)
     end
   end
 
@@ -43,6 +45,7 @@ class Menu
     if @timeOut == IDLE_TIME then
       @items[@selectedOption].value -= 1
       @timeOut = 0
+      @soundFX.play(false)
     end
   end
   
@@ -50,6 +53,7 @@ class Menu
     if @timeOut == IDLE_TIME then
     @selectedOption += 1
     @timeOut = 0
+    @soundFX.play(false)
       if @selectedOption>@items.length-1 then
         @selectedOption = 0
       end
@@ -60,6 +64,7 @@ class Menu
     if @timeOut == IDLE_TIME then
     @selectedOption -= 1
     @timeOut = 0
+    @soundFX.play(false)
       if @selectedOption<0 then
         @selectedOption = @items.length-1
       end

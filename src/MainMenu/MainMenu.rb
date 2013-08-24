@@ -15,14 +15,14 @@ class MainMenu
   def initialize(window,soundOptions)
     @finished = 0
     @state = 0 
-    @menu = Menu.new(window,220,50,'Main Menu',80)
+    @menu = Menu.new(window,220,50,'Main Menu',80,soundOptions)
     @menu.addItem('Quick Race',-1)   
     @menu.addItem('Story Mode',-1)   
     @menu.addItem('Options',-1)   
     @menu.addItem('Credits',-1)   
     @menu.addItem('Exit',-1)   
 
-    @optionsMenu = Menu.new(window,100,100,'Options',50)
+    @optionsMenu = Menu.new(window,100,100,'Options',50,soundOptions)
     @optionsMenu.addItem('Music Volume',soundOptions.musicVolume*100)
     @optionsMenu.addItem('Sound FX Volume',soundOptions.soundFXVolume*100)
     @optionsMenu.addItem('Back',-1)
@@ -31,6 +31,8 @@ class MainMenu
     
     @idleTime = IDLE_TIME
     @music = Music.new(window,rand(6)+1,soundOptions.musicVolume)
+    @acceptFX = SoundFX.new(window,"../media/sfx/accept.ogg",soundOptions.soundFXVolume)
+    @backFX = SoundFX.new(window,"../media/sfx/back.ogg",soundOptions.soundFXVolume)
 
   end
 
@@ -75,26 +77,33 @@ class MainMenu
       when 0
       case @menu.selectedOption
         when 0
+    	  @acceptFX.play(false)
           @finished = 2
         when 1
+    	  @acceptFX.play(false)
           @finished = 2
         when 2
+    	  @acceptFX.play(false)
           @idleTime = IDLE_TIME
           @state = 2
         when 3
+    	  @acceptFX.play(false)
           @idleTime = IDLE_TIME
           @credits.reset()
           @state = 3
         when 4
+    	  @acceptFX.play(false)
           exit
         end
       when 2
       case @optionsMenu.selectedOption
         when 2
+    	  @backFX.play(false)
           @idleTime = IDLE_TIME
           @state = 0
         end
       when 3
+    	@backFX.play(false)
         @idleTime = IDLE_TIME
         @state = 0
       end

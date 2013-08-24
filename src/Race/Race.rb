@@ -24,6 +24,8 @@ class Race
 
     #Sound
     @soundOptions = soundOptions
+    @acceptFX = SoundFX.new(window,"../media/sfx/accept.ogg",soundOptions.soundFXVolume)
+    @backFX = SoundFX.new(window,"../media/sfx/back.ogg",soundOptions.soundFXVolume)
     @finishSFX = SoundFX.new(window,"../media/sfx/finish.ogg",soundOptions.soundFXVolume)
     @music = Music.new(window,rand(6)+1,soundOptions.musicVolume)
 
@@ -56,7 +58,7 @@ class Race
     @space.add_collision_handler(:bigWheel,:floor,CollisionHandler.new(window,@car,2,soundOptions.soundFXVolume)) 
    
     #Pause Menu 
-    @pauseMenu = Menu.new(window,100,200,'Paused',38)   
+    @pauseMenu = Menu.new(window,100,200,'Paused',38,soundOptions)   
     @pauseMenu.addItem('Resume',-1)
     @pauseMenu.addItem('Exit',-1)
 
@@ -87,6 +89,7 @@ class Race
       #Handle controls
       if window.button_down? Gosu::Button::KbEscape then
         if @lastPause == IDLE_TIME then
+          @acceptFX.play(false)
           @paused = !@paused
         end
         if @paused then
@@ -157,8 +160,10 @@ class Race
         if window.button_down? Gosu::Button::KbSpace then
           case @pauseMenu.selectedOption
             when 0
+              @acceptFX.play(false)
               @paused = !@paused
             when 1
+              @backFX.play(false)
               @finished = 1
             end
         end

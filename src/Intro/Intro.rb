@@ -20,6 +20,7 @@ class Intro
       if window.button_down? Gosu::Button::KbSpace and @idleTime == IDLE_TIME then
          @counter  += 500
          @idleTime = 0
+         @fadingCounter = 1;
       if @counter > 1000
          @finished = 1
       end
@@ -28,8 +29,6 @@ class Intro
 
   def draw(window)
     if @counter < 500
-      color = Color.new(0,0,0,255)
-      window.draw_quad(0,0,color,0,SCREEN_HEIGHT,color,SCREEN_WIDTH,0,color,SCREEN_WIDTH,SCREEN_HEIGHT,color)
       @font.draw("By:", 350, 90, 1.0, 1.0, 1.0)
       @font.draw("http://www.github.com/namelivia", 280, 280, 1.0, 1.0, 1.0)
       @font.draw("This is just a work in progress demo!", 280, 500, 1.0, 1.0, 1.0)

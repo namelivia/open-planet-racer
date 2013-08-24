@@ -12,6 +12,7 @@ include Gosu
 SCREEN_WIDTH = 800
 SCREEN_HEIGHT = 600
 IDLE_TIME = 30
+FADE_SPEED = 8
 
 class Game < Window
 
@@ -21,6 +22,7 @@ class Game < Window
     @soundOptions = SoundOptions.new()
     @gameState = GameState.new()
     @intro = Intro.new(self,@soundOptions)
+    @fading = 0
   end
  
   def transition(currentScreen)
@@ -39,11 +41,47 @@ class Game < Window
   def update
      case @gameState.stage
      when 0
-        @intro.update(self)
+        if @intro.finished == 0 then
+          if @fading > 0 then
+            @fading -= FADE_SPEED
+          else
+            @intro.update(self)
+          end
+        else
+          if @fading > 255 then
+            transition(@intro)
+          else
+            @fading += FADE_SPEED
+          end
+        end
      when 1
-        @mainMenu.update(self)
+        if @mainMenu.finished == 0 then
+          if @fading > 0 then
+            @fading -= FADE_SPEED
+          else
+            @mainMenu.update(self)
+          end
+        else
+          if @fading > 255 then
+            transition(@mainMenu)
+          else
+            @fading += FADE_SPEED
+          end
+        end
      when 2
-        @race.update(self)
+        if @race.finished == 0 then
+          if @fading > 0 then
+            @fading -= FADE_SPEED
+          else
+            @race.update(self)
+          end
+        else
+          if @fading > 255 then
+            transition(@race)
+          else
+            @fading += FADE_SPEED
+          end
+        end
      end
   end
 
@@ -51,21 +89,16 @@ class Game < Window
      case @gameState.stage
      when 0
         @intro.draw(self)
-        if @intro.finished != 0
-          transition(@intro)
-        end
      when 1
         @mainMenu.draw(self)
-        if @mainMenu.finished != 0
-          transition(@mainMenu)
-        end
      when 2
         @race.draw(self)
-        if @race.finished != 0
-          @race.finalize()
-          transition(@race)
-        end
      end
+     fadecolor = Color.new(@fading,0,0,0)
+     draw_quad(0,0,fadecolor,
+            0,SCREEN_HEIGHT,fadecolor,
+            SCREEN_WIDTH,0,fadecolor,
+            SCREEN_WIDTH,SCREEN_HEIGHT,fadecolor,1)
   end
 end
 

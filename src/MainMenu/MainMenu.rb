@@ -93,7 +93,7 @@ class MainMenu
           @state = 3
         when 4
     	  @acceptFX.play(false)
-          exit
+          @finished = -1
         end
       when 2
       case @optionsMenu.selectedOption

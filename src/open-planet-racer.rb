@@ -22,13 +22,15 @@ class Game < Window
     @soundOptions = SoundOptions.new()
     @gameState = GameState.new()
     @intro = Intro.new(self,@soundOptions)
-    @fading = 0
+    @fading = 255
   end
  
   def transition(currentScreen)
     @gameState.stage = currentScreen.finished
     currentScreen = nil
     case @gameState.stage
+    when -1
+      exit!
     when 0
       @intro = Intro.new(self,@soundOptions)
     when 1

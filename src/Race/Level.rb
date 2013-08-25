@@ -5,8 +5,9 @@ class Level
   attr_accessor :levelLength
   attr_accessor :finishHeight
 
-def initialize(window,space,length,randomness,floorColor)
+def initialize(window,space,length,randomness,floorColor,skyColor)
     @floorColor = floorColor
+    @skyColor = skyColor
     @levelLength = (length+10)*200
     @heights = length.times.map{rand(randomness)-50}
     @finishHeight = @heights[length-1]
@@ -68,6 +69,29 @@ def initialize(window,space,length,randomness,floorColor)
   end
 
   def draw(window,scroll_x,scroll_y,screen_height,color)
+    #gradient background
+        limit = 0
+    size = 9
+    color = Color.new(255,0,0,0)
+    color3 = Color.new(255,200,200,200)
+
+    while limit+size<SCREEN_HEIGHT+20 do
+
+        window.draw_quad(0,limit,color,0,limit+size,color,SCREEN_WIDTH,limit+size,color,SCREEN_WIDTH,limit,color)
+        if color.red < @skyColor.red then
+          color.red += 1 
+        end
+        if color.blue < @skyColor.blue then
+          color.blue += 1  
+        end
+        if color.green < @skyColor.green then
+          color.green += 1  
+        end
+        limit += size
+        size = size
+
+    end
+
     @starField.draw(window,scroll_x,scroll_y) 
     window.draw_quad(-500-scroll_x,800-scroll_y,@floorColor,-500-scroll_x,400-scroll_y,@floorColor,0-scroll_x,400-scroll_y,@floorColor,0-scroll_x,800-scroll_y,@floorColor)
     

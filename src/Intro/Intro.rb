@@ -4,7 +4,7 @@ class Intro
 
   def initialize(window,soundOptions)
     @counter = 0
-    @font = Gosu::Font.new(window, "Arial", 18)
+    @font = Gosu::Font.new(window, "../media/fonts/press-start-2p.ttf", 20)
     @titleImage = Image.new(window,"../media/gfx/title.png",true)
     @namelivia = Image.new(window,"../media/gfx/namelivia.png",true)
     @finished = 0;
@@ -29,10 +29,10 @@ class Intro
 
   def draw(window)
     if @counter < 500
-      @font.draw("By:", 350, 90, 1.0, 1.0, 1.0)
-      @font.draw("http://www.github.com/namelivia", 280, 280, 1.0, 1.0, 1.0)
-      @font.draw("This is just a work in progress demo!", 280, 500, 1.0, 1.0, 1.0)
-      @namelivia.draw(330,130,0)
+      @font.draw("By:", 150, 90, 1.0, 1.0, 1.0)
+      @font.draw("http://www.github.com/namelivia", 40, 470, 1.0, 1.0, 1.0)
+      @font.draw("This is just a work in progress demo!", 40, 500, 1.0, 1.0, 1.0)
+      @namelivia.draw(230,130,0)
     else
       @titleImage.draw(0,0,0)
     end

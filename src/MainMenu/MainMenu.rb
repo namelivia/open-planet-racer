@@ -1,6 +1,6 @@
 require './Common/Menu.rb'
 require './Common/ScrollingText.rb'
-require './Race/Level.rb'
+require './Race/StarField.rb'
 
 #States:
 # 0 - Quick Race
@@ -14,20 +14,21 @@ class MainMenu
 
   def initialize(window,soundOptions)
     @finished = 0
-    @state = 0 
-    @menu = Menu.new(window,220,50,'Main Menu',80,soundOptions)
+    @state = 0
+    @titleImage = Image.new(window,"../media/gfx/title.png",true) 
+    @menu = Menu.new(window,220,50,'Main Menu',30,soundOptions)
     @menu.addItem('Quick Race',-1)   
     @menu.addItem('Story Mode',-1)   
     @menu.addItem('Options',-1)   
     @menu.addItem('Credits',-1)   
     @menu.addItem('Exit',-1)   
 
-    @optionsMenu = Menu.new(window,100,100,'Options',50,soundOptions)
+    @optionsMenu = Menu.new(window,100,100,'Options',30,soundOptions)
     @optionsMenu.addItem('Music Volume',soundOptions.musicVolume*100)
     @optionsMenu.addItem('Sound FX Volume',soundOptions.soundFXVolume*100)
     @optionsMenu.addItem('Back',-1)
 
-    @credits = ScrollingText.new(window,100,'../Credits',50)
+    @credits = ScrollingText.new(window,100,'../Credits',20)
     
     @idleTime = IDLE_TIME
     @music = Music.new(window,rand(6)+1,soundOptions.musicVolume)
@@ -111,23 +112,8 @@ class MainMenu
   end
 
   def draw(window)
-
-    limit = 0
-    size = 9
-    color = Color.new(255,0,0,0)
-    color3 = Color.new(255,200,200,200)
-
-    while limit+size<SCREEN_HEIGHT+20 do
-
-        window.draw_quad(0,limit,color,0,limit+size,color,SCREEN_WIDTH,limit+size,color,SCREEN_WIDTH,limit,color)
-        color.red += 1
-        color.blue += 1
-        limit += size
-        size = size
-
-    end
-
-      color = Color.new(0,0,0,255)
+      @titleImage.draw(0,0,0)
+      color = Color.new(200,0,0,0)
       window.draw_quad(0,0,color,0,SCREEN_HEIGHT,color,SCREEN_WIDTH,0,color,SCREEN_WIDTH,SCREEN_HEIGHT,color)
       case @state
       when 0

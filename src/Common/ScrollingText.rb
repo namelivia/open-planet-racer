@@ -4,7 +4,7 @@ class ScrollingText
     @x = x
     @text = text
     @fontSize = fontSize
-    @font = Gosu::Font.new(window, "Arial", @fontSize)
+    @font = Gosu::Font.new(window, "../media/fonts/press-start-2p.ttf", @fontSize)
   end
 
   def reset()

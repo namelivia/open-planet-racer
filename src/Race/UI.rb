@@ -5,8 +5,8 @@ class UI
   def initialize(window,afterburner)
     @minimap = Minimap.new(window)
     @powerbar = PowerBar.new(window,5,5,afterburner)
-    @font = Gosu::Font.new(window, "Arial", 18)
-    @noticeFont = Gosu::Font.new(window,"Arial",60)
+    @font = Gosu::Font.new(window, "../media/fonts/press-start-2p.ttf", 11)
+    @noticeFont = Gosu::Font.new(window,"../media/fonts/press-start-2p.ttf",25)
   end
 
   def update(completed,rival)
@@ -22,7 +22,7 @@ class UI
         @noticeFont.draw("Destroyed!",SCREEN_WIDTH/2-100,SCREEN_HEIGHT/2,1.0,1.0,1.0)
       else
         @noticeFont.draw("Finished!",SCREEN_WIDTH/2-100,SCREEN_HEIGHT/2,1.0,1.0,1.0)
-        @noticeFont.draw("Time: #{'%.2f' % time}",SCREEN_WIDTH/2-150,SCREEN_HEIGHT/2+100,1.0,1.0,1.0)
+        @noticeFont.draw("Time: #{'%.2f' % time}",SCREEN_WIDTH/2-120,SCREEN_HEIGHT/2+40,1.0,1.0,1.0)
       end
     end
   end

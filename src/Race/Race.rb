@@ -32,8 +32,9 @@ class Race
     #Level
     @space = CP::Space.new
     @space.gravity = CP::Vec2.new(0,(rand(100)+20)/10)
-    floorColor = Color.new(255,rand(155)+100,rand(155)+100,rand(155)+100)
-    @level = Level.new(window,@space,100,200,floorColor)
+    floorColor = Color.new(255,rand(155)+50,rand(155)+50,rand(155)+50)
+    skyColor = Color.new(255,rand(100),rand(50),rand(100))
+    @level = Level.new(window,@space,100,200,floorColor,skyColor)
     @temperature = 50-rand(100)
     @planetName = RandomName.new.getRandomName()
     @scroll_x = @scroll_y = 0
@@ -49,7 +50,7 @@ class Race
     @rivalPortrait = Image.new(window,"../media/gfx/alienPortrait.png",true)
   
     #User Interface 
-    @font = Gosu::Font.new(window, "Arial", 25)
+    @font = Gosu::Font.new(window, "../media/fonts/press-start-2p.ttf", 18)
     @userInterface = UI.new(window,@car.afterburner)
 
     #Collsion Handlers
@@ -183,23 +184,12 @@ class Race
 
   def draw(window)
 
-    limit = 0
-    size = 9
-    color = Color.new(255,0,0,0)
     color3 = Color.new(255,200,200,200)
-
-    while limit+size<SCREEN_HEIGHT+20 do
-
-        window.draw_quad(0,limit,color,0,limit+size,color,SCREEN_WIDTH,limit+size,color,SCREEN_WIDTH,limit,color)
-        color.red += 1
-        color.blue += 1
-        limit += size
-        size = size
-
-    end
     @level.draw(window,@scroll_x,@scroll_y,SCREEN_HEIGHT,color3)
     
     if @state == 0 then
+      color = Color.new(200,0,0,0)
+      window.draw_quad(0,0,color,0,SCREEN_HEIGHT,color,SCREEN_WIDTH,0,color,SCREEN_WIDTH,SCREEN_HEIGHT,color)
       @rivalPortrait.draw(12,12,0)
       @font.draw("Planet: #{@planetName}", 280, 12, 1.0, 1.0, 1.0)
       @font.draw("Gravity: #{@space.gravity.y} m/s²", 280, 42, 1.0, 1.0, 1.0)

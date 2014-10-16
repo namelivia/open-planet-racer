@@ -146,6 +146,9 @@ class Race
           @finishSFX.play(false)
           @car.finish()
           @state = 2
+	open('../data/times', 'a') { |f|
+  	f.puts @time
+	}
         end
         if not @car.destroyed and @state == 1 and @car.life < 0 then
           @car.destroy(@space)

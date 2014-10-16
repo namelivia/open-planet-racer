@@ -47,7 +47,11 @@ class Race
     @rivalTeleported = false
     @rivalTime = 20+rand(20)
     @rivalName = RandomName.new.getRandomName()
-    @rivalPortrait = Image.new(window,"../media/gfx/alienPortrait.png",true)
+	if (rand(2) == 0)
+    	@rivalPortrait = Image.new(window,"../media/gfx/alienPortrait.png",true)
+	else
+    	@rivalPortrait = Image.new(window,"../media/gfx/alienPortrait2.png",true)
+	end
   
     #User Interface 
     @font = Gosu::Font.new(window, "../media/fonts/press-start-2p.ttf", 18)

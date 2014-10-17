@@ -35,8 +35,6 @@ class Race
     floorColor = Color.new(255,rand(155)+50,rand(155)+50,rand(155)+50)
     skyColor = Color.new(255,rand(100),rand(50),rand(100))
     @level = Level.new(window,@space,100,200,floorColor,skyColor)
-    @temperature = 50-rand(100)
-    @planetName = RandomName.new.getRandomName()
     @scroll_x = @scroll_y = 0
     
     #Cars
@@ -46,13 +44,11 @@ class Race
     @rival = Car.new(window,@space,rivalInitialPosition,false,soundOptions.soundFXVolume)
     @rivalTeleported = false
     @rivalTime = 20+rand(20)
-    @rivalName = RandomName.new.getRandomName()
-	if (rand(2) == 0)
-    	@rivalPortrait = Image.new(window,"../media/gfx/alienPortrait.png",true)
-	else
-    	@rivalPortrait = Image.new(window,"../media/gfx/alienPortrait2.png",true)
-	end
-  
+    @rivalName = RandomName.random_name
+		@planetName = RandomName.random_name
+		rivalPortraits = ['alienPortrait.png','alienPortrait2.png'];
+    @rivalPortrait = Image.new(window,'../media/gfx/'+rivalPortraits[rand(2)],true)
+  	@temperature = 50-rand(100)
     #User Interface 
     @font = Gosu::Font.new(window, "../media/fonts/press-start-2p.ttf", 18)
     @userInterface = UI.new(window,@car.afterburner)

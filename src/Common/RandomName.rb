@@ -2,69 +2,23 @@
 
 class RandomName
 
-def getRandomName()
-
-  retName = ""
-  length = rand(1)+5;
- #// CVCCVC or VCCVCV
-  if (rand(1) < 1) then
-
-	retName += getRandomConsonant()
-        retName = retName.upcase
-        retName += getRandomVowel()
-        retName += getRandomConsonant()
-        retName += getRandomConsonant()
-        if (length >= 5) then 
-		retName += getRandomVowel() 
+	def self.random_name
+		[[random_consonant.upcase,random_vowel,random_consonant,random_consonant],
+		[random_consonant.upcase,random_vowel,random_consonant,random_consonant,random_vowel],
+		[random_consonant.upcase,random_vowel,random_consonant,random_consonant,random_vowel,random_consonant],
+		[random_vowel.upcase,random_consonant,random_consonant,random_vowel],
+		[random_vowel.upcase,random_consonant,random_consonant,random_vowel,random_consonant],
+		[random_vowel.upcase,random_consonant,random_consonant,random_vowel,random_consonant,random_vowel]].sample.join
 	end
-        if (length >= 6) then 
-		retName += getRandomConsonant()
+
+	def self.random_vowel
+		['a','e','i','o','u'].sample
 	end
-  else
-  	retName += getRandomVowel()
-        retName = retName.upcase
-        retName += getRandomConsonant()
-        retName += getRandomConsonant()
-        retName += getRandomVowel()
-        if (length >= 5) then
-        	 retName += getRandomConsonant()
-        end
-        if (length >= 6) then 
-		retName += getRandomVowel()
-        end
-  end
-  return retName
-end
 
-def getRandomVowel()
-  randNum = rand(3)+1
-  case (randNum)
-    when 0
-      return 'a'
-    when 1
-      return 'e'
-    when 2
-      return 'i'
-    when 3
-      return 'o'
-    when 4
-      return 'u'
-    end
-end
+	def self.random_consonant
+		([*'b'..'z']-['e','i','o','u']).sample
+	end
 
-def  getRandomConsonant()
-                randLetter = (rand(25)+97).chr
-                while (isCharVowel(randLetter)) do
-                  randLetter = (rand(25)+97).chr
-                end
-	return randLetter
-end
+	private :random_vowel,:random_consonant
 
-def isCharVowel(letter)
-  if (letter == 'a' or letter == 'e' or letter == 'i' or letter == 'o' or letter == 'u') then
-    return true
-  else
-    return false
-  end
-end
 end

@@ -1,8 +1,8 @@
 class SoundOptions
-   attr_accessor :musicVolume
-   attr_accessor :soundFXVolume
-   def initialize()
-       @musicVolume = 1
-       @soundFXVolume = 1
+   attr_accessor :music_volume
+   attr_accessor :fx_volume
+   def initialize
+       @music_volume = 1
+       @fx_volume= 1
    end
 end

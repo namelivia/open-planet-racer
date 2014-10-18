@@ -1,14 +1,10 @@
 class CollisionHandler
- def initialize(window,car,type,optionsVolume)
+ def initialize(window,car,type,sound)
    @type = type
    if @type == 0 then
-     @sound = SoundFX.new(window,"../media/sfx/crash.ogg",optionsVolume)
      @car = car
-   elsif @type == 1 then
-     @sound = SoundFX.new(window,"../media/sfx/stomp1.ogg",optionsVolume)
-   else
-     @sound = SoundFX.new(window,"../media/sfx/stomp2.ogg",optionsVolume)
    end
+	 @sound = sound
  end
  def begin(a, b, arbiter)
    true

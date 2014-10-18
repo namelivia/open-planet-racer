@@ -2,14 +2,14 @@ class Intro
 
   attr_accessor :finished
 
-  def initialize(window,soundOptions)
+  def initialize(window,resource_manager)
     @counter = 0
-    @font = Gosu::Font.new(window, "../media/fonts/press-start-2p.ttf", 20)
-    @titleImage = Image.new(window,"../media/gfx/title.png",true)
-    @namelivia = Image.new(window,"../media/gfx/namelivia.png",true)
+    @font = resource_manager.font
+    @titleImage = resource_manager.title_image
+    @namelivia = resource_manager.namelivia
     @finished = 0;
     @idleTime = 0;
-    @music = Music.new(window,7,soundOptions.musicVolume)
+		puts resource_manager.music[6].play
   end
 
   def update(window)

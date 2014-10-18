@@ -19,6 +19,6 @@ class RandomName
 		([*'b'..'z']-['e','i','o','u']).sample
 	end
 
-	private :random_vowel,:random_consonant
+	private_class_method :random_vowel,:random_consonant
 
 end

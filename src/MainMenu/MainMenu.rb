@@ -12,28 +12,28 @@ class MainMenu
 
   attr_accessor :finished
 
-  def initialize(window,soundOptions)
+  def initialize(window,resource_manager,sound_options)
     @finished = 0
     @state = 0
-    @titleImage = Image.new(window,"../media/gfx/title.png",true) 
-    @menu = Menu.new(window,220,50,'Main Menu',30,soundOptions)
-    @menu.addItem('Quick Race',-1)   
-    @menu.addItem('Story Mode',-1)   
-    @menu.addItem('Options',-1)   
-    @menu.addItem('Credits',-1)   
-    @menu.addItem('Exit',-1)   
+    @titleImage = resource_manager.title_image
+    @menu = Menu.new(window,220,50,'Main Menu',resource_manager.font,resource_manager.cursor_sound)
+    @menu.add_item('Quick Race',nil)   
+    @menu.add_item('Story Mode',nil)   
+    @menu.add_item('Options',nil)   
+    @menu.add_item('Credits',nil)   
+    @menu.add_item('Exit',nil)   
 
-    @optionsMenu = Menu.new(window,100,100,'Options',30,soundOptions)
-    @optionsMenu.addItem('Music Volume',soundOptions.musicVolume*100)
-    @optionsMenu.addItem('Sound FX Volume',soundOptions.soundFXVolume*100)
-    @optionsMenu.addItem('Back',-1)
+    @optionsMenu = Menu.new(window,100,100,'Options',resource_manager.font,resource_manager.cursor_sound)
+    @optionsMenu.add_item('Music Volume',sound_options.music_volume*100)
+    @optionsMenu.add_item('Sound FX Volume',sound_options.fx_volume*100)
+    @optionsMenu.add_item('Back',nil)
 
     @credits = ScrollingText.new(window,100,'../Credits',20)
     
     @idleTime = IDLE_TIME
-    @music = Music.new(window,rand(6)+1,soundOptions.musicVolume)
-    @acceptFX = SoundFX.new(window,"../media/sfx/accept.ogg",soundOptions.soundFXVolume)
-    @backFX = SoundFX.new(window,"../media/sfx/back.ogg",soundOptions.soundFXVolume)
+		resource_manager.music.sample.play
+    @acceptFX = resource_manager.cursor_select
+    @backFX = resource_manager.cursor_back
 
   end
 
@@ -61,22 +61,22 @@ class MainMenu
     if window.button_down? Gosu::Button::KbUp then
       case @state
         when 0
-          @menu.prevOption()
+          @menu.prev
         when 2
-          @optionsMenu.prevOption()
+          @optionsMenu.prev
         end
     elsif window.button_down? Gosu::Button::KbDown then
       case @state
         when 0
-          @menu.nextOption()
+          @menu.next
         when 2
-          @optionsMenu.nextOption()
+          @optionsMenu.next
         end
     end
     if window.button_down? Gosu::Button::KbSpace and @idleTime == 0 then
     case @state
       when 0
-      case @menu.selectedOption
+      case @menu.selected
         when 0
     	  @acceptFX.play(false)
           @finished = 2
@@ -97,7 +97,7 @@ class MainMenu
           @finished = -1
         end
       when 2
-      case @optionsMenu.selectedOption
+      case @optionsMenu.selected
         when 2
     	  @backFX.play(false)
           @idleTime = IDLE_TIME

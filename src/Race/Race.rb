@@ -1,5 +1,4 @@
 require './Race/Car.rb'
-require './Race/Music.rb'
 require './Race/Level.rb'
 require './Race/CollisionHandler.rb'
 require './Race/UI.rb'
@@ -11,7 +10,7 @@ class Race
   attr_accessor :finished
   SUBSTEPS = 10
 
-  def initialize(window,soundOptions)
+  def initialize(window,resource_manager)
 
     #General
     @state = 0
@@ -23,11 +22,11 @@ class Race
     @time = 0
 
     #Sound
-    @soundOptions = soundOptions
-    @acceptFX = SoundFX.new(window,"../media/sfx/accept.ogg",soundOptions.soundFXVolume)
-    @backFX = SoundFX.new(window,"../media/sfx/back.ogg",soundOptions.soundFXVolume)
-    @finishSFX = SoundFX.new(window,"../media/sfx/finish.ogg",soundOptions.soundFXVolume)
-    @music = Music.new(window,rand(6)+1,soundOptions.musicVolume)
+    @acceptFX = resource_manager.cursor_select
+    @backFX = resource_manager.cursor_back
+    @finishSFX = resource_manager.finish
+    @music = resource_manager.music.sample
+		@music.play
 
     #Level
     @space = CP::Space.new
@@ -39,29 +38,46 @@ class Race
     
     #Cars
     initialPosition = CP::Vec2.new(80,200)
-    @car = Car.new(window,@space,initialPosition,true,soundOptions.soundFXVolume)
+    @car = Car.new(window,
+									 @space,
+									 initialPosition,
+									 true,
+									 resource_manager.engine_sound,
+									 resource_manager.exploding_sound,
+									 resource_manager.rocket_sound)
     rivalInitialPosition = CP::Vec2.new(-80,200)
-    @rival = Car.new(window,@space,rivalInitialPosition,false,soundOptions.soundFXVolume)
+    @rival = Car.new(window,
+										 @space,
+										 rivalInitialPosition,
+										 false,
+										 resource_manager.engine_sound,
+										 resource_manager.exploding_sound,
+										 resource_manager.rocket_sound)
     @rivalTeleported = false
     @rivalTime = 20+rand(20)
     @rivalName = RandomName.random_name
 		@planetName = RandomName.random_name
-		rivalPortraits = ['alienPortrait.png','alienPortrait2.png'];
-    @rivalPortrait = Image.new(window,'../media/gfx/'+rivalPortraits[rand(2)],true)
+    @rivalPortrait = resource_manager.rival_portraits.sample
   	@temperature = 50-rand(100)
     #User Interface 
     @font = Gosu::Font.new(window, "../media/fonts/press-start-2p.ttf", 18)
     @userInterface = UI.new(window,@car.afterburner)
 
     #Collsion Handlers
-    @space.add_collision_handler(:chasis,:floor,CollisionHandler.new(window,@car,0,soundOptions.soundFXVolume)) 
-    @space.add_collision_handler(:wheel,:floor,CollisionHandler.new(window,@car,1,soundOptions.soundFXVolume)) 
-    @space.add_collision_handler(:bigWheel,:floor,CollisionHandler.new(window,@car,2,soundOptions.soundFXVolume)) 
+    @space.add_collision_handler(:chasis,
+																 :floor,
+																 CollisionHandler.new(window,@car,0,resource_manager.crash_sound)) 
+    @space.add_collision_handler(:wheel,
+																 :floor,
+																 CollisionHandler.new(window,@car,1,resource_manager.front_wheel_sound)) 
+    @space.add_collision_handler(:bigWheel,
+																 :floor,
+																 CollisionHandler.new(window,@car,2,resource_manager.back_wheel_sound)) 
    
     #Pause Menu 
-    @pauseMenu = Menu.new(window,100,200,'Paused',38,soundOptions)   
-    @pauseMenu.addItem('Resume',-1)
-    @pauseMenu.addItem('Exit',-1)
+    @pauseMenu = Menu.new(window,100,200,'Paused',resource_manager.font,resource_manager.cursor_sound)   
+    @pauseMenu.add_item('Resume',nil)
+    @pauseMenu.add_item('Exit',nil)
 
   end
 
@@ -157,12 +173,12 @@ class Race
       else
         @pauseMenu.update()
         if window.button_down? Gosu::Button::KbUp then
-          @pauseMenu.prevOption()
+          @pauseMenu.prev
         elsif window.button_down? Gosu::Button::KbDown then
-          @pauseMenu.nextOption()
+          @pauseMenu.next
         end
         if window.button_down? Gosu::Button::KbSpace then
-          case @pauseMenu.selectedOption
+          case @pauseMenu.selected
             when 0
               @acceptFX.play(false)
               @paused = !@paused
@@ -218,10 +234,10 @@ class Race
     end
   end
 
-  def finalize()
-    @car.finalize()
-    @rival.finalize()
-    @music.stop()
+  def finalize
+    @car.finalize
+    @rival.finalize
+    #@music.stop
   end
 
 end

@@ -2,127 +2,64 @@ require './Common/Menu.rb'
 require './Common/ScrollingText.rb'
 require './Race/StarField.rb'
 
-#States:
-# 0 - Quick Race
-# 1 - Story Mode
-# 2 - Options
-# 3 - Credits
-
 class MainMenu
 
   attr_accessor :finished
 
   def initialize(window,resource_manager,sound_options)
     @finished = 0
-    @state = 0
-    @titleImage = resource_manager.title_image
-    @menu = Menu.new(window,220,50,'Main Menu',resource_manager.font,resource_manager.cursor_sound)
-    @menu.add_item('Quick Race',nil)   
-    @menu.add_item('Story Mode',nil)   
-    @menu.add_item('Options',nil)   
-    @menu.add_item('Credits',nil)   
-    @menu.add_item('Exit',nil)   
-
-    @optionsMenu = Menu.new(window,100,100,'Options',resource_manager.font,resource_manager.cursor_sound)
-    @optionsMenu.add_item('Music Volume',sound_options.music_volume*100)
-    @optionsMenu.add_item('Sound FX Volume',sound_options.fx_volume*100)
-    @optionsMenu.add_item('Back',nil)
-
-    @credits = ScrollingText.new(window,100,'../Credits',20)
-    
-    @idleTime = IDLE_TIME
+    @current_state = 0
+		@states = []
+    @title_image = resource_manager.title_image
 		resource_manager.music.sample.play
-    @acceptFX = resource_manager.cursor_select
-    @backFX = resource_manager.cursor_back
-
+    @idle = IDLE_TIME
+    @credits =
+			ScrollingText.new(window,
+												100,
+												resource_manager.credits,
+												resource_manager.font,
+												resource_manager.cursor_back
+											 ) { @current_state = 0 }
+    @menu = Menu.new(window,220,50,'Main Menu',resource_manager.font,resource_manager.cursor_sound)
+    @menu.add_item('Quick Race',nil,resource_manager.cursor_select) { @finished = 2 }
+    @menu.add_item('Story Mode',nil,resource_manager.cursor_select) { @finished = 3 }  
+    @menu.add_item('Options',nil,resource_manager.cursor_select) { @current_state = 1 }
+    @menu.add_item('Credits',nil,resource_manager.cursor_select) { @credits.reset; @current_state = 2 }
+    @menu.add_item('Exit',nil,resource_manager.cursor_back) { @finished = -1 }
+    @options_menu = Menu.new(window,100,100,'Options',resource_manager.font,resource_manager.cursor_sound)
+    @options_menu.add_item('Music Volume',sound_options.music_volume*100,nil)
+    @options_menu.add_item('Sound FX Volume',sound_options.fx_volume*100,nil)
+    @options_menu.add_item('Back',nil,resource_manager.cursor_back) { @current_state = 0 }
+		@states.push(@menu)
+		@states.push(@options_menu)
+		@states.push(@credits)
   end
 
   def update(window)
-    if @idleTime > 0 
-       @idleTime -= 1
-    end
-    case @state
-      when 0
-        @menu.update()
-      when 2
-        @optionsMenu.update()
-      when 3
-        @credits.update()
-      end
+    @idle -= 1 if @idle > 0 
+		@states[@current_state].update
 
-    if window.button_down? Gosu::Button::KbLeft and @state == 2 then
-      @optionsMenu.decValue()
-    else
-    if window.button_down? Gosu::Button::KbRight and @state == 2 then
-      @optionsMenu.incValue()
-    end
-    end
+		input = {'left' => window.button_down?(Gosu::Button::KbLeft),
+					 	 'right' => window.button_down?(Gosu::Button::KbRight),
+						 'up' => window.button_down?(Gosu::Button::KbUp),
+						 'down' => window.button_down?(Gosu::Button::KbDown),
+						 'action' => window.button_down?(Gosu::Button::KbSpace)}
 
-    if window.button_down? Gosu::Button::KbUp then
-      case @state
-        when 0
-          @menu.prev
-        when 2
-          @optionsMenu.prev
-        end
-    elsif window.button_down? Gosu::Button::KbDown then
-      case @state
-        when 0
-          @menu.next
-        when 2
-          @optionsMenu.next
-        end
-    end
-    if window.button_down? Gosu::Button::KbSpace and @idleTime == 0 then
-    case @state
-      when 0
-      case @menu.selected
-        when 0
-    	  @acceptFX.play(false)
-          @finished = 2
-        when 1
-    	  @acceptFX.play(false)
-          @finished = 2
-        when 2
-    	  @acceptFX.play(false)
-          @idleTime = IDLE_TIME
-          @state = 2
-        when 3
-    	  @acceptFX.play(false)
-          @idleTime = IDLE_TIME
-          @credits.reset()
-          @state = 3
-        when 4
-    	  @acceptFX.play(false)
-          @finished = -1
-        end
-      when 2
-      case @optionsMenu.selected
-        when 2
-    	  @backFX.play(false)
-          @idleTime = IDLE_TIME
-          @state = 0
-        end
-      when 3
-    	@backFX.play(false)
-        @idleTime = IDLE_TIME
-        @state = 0
-      end
-      end
-  end
+			@states[@current_state].decrement_value if input["left"]
+			@states[@current_state].increment_value if input["right"]
+			@states[@current_state].prev if input["up"]
+			@states[@current_state].next if input["down"]
+			if input["action"] and @idle == 0 then
+				@idle = IDLE_TIME
+				@states[@current_state].select
+			end
+	end
 
   def draw(window)
-      @titleImage.draw(0,0,0)
+      @title_image.draw(0,0,0)
       color = Color.new(200,0,0,0)
       window.draw_quad(0,0,color,0,SCREEN_HEIGHT,color,SCREEN_WIDTH,0,color,SCREEN_WIDTH,SCREEN_HEIGHT,color)
-      case @state
-      when 0
-        @menu.draw(window)
-      when 2
-        @optionsMenu.draw(window)
-      when 3
-        @credits.draw(window)
-      end
+			@states[@current_state].draw(window)
   end
 end
 

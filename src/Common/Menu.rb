@@ -2,8 +2,6 @@ require './Common/TextItem.rb'
 
 class Menu
 
-	attr_accessor :selected
-
 	def initialize(window,x,y,title,font,sound)
 		@x = x
 		@y = y
@@ -17,8 +15,8 @@ class Menu
 		@max_length = 0
 	end
 
-	def add_item(name,value)
-		@items.push(TextItem.new(name,@items.length+1,value))
+	def add_item(name,value,sound,&action)
+		@items.push(TextItem.new(name,@items.length+1,value,sound,&action))
 		@max_length = @items.map{ |item| item.value.nil? ? item.text : item.text + ' ' + item.value.to_s}.
 			group_by(&:size).max.first
 	end
@@ -28,18 +26,22 @@ class Menu
 	end
 
 	def increment_value
-		if @timeout == IDLE_TIME then
-			@items[@selected].value += 1
-			@timeout = 0
-			@sound.play(false)
+		unless @items[@selected].value.nil?
+			if @timeout == IDLE_TIME then
+				@items[@selected].value += 1
+				@timeout = 0
+				@sound.play(false)
+			end
 		end
 	end
 
 	def decrement_value
-		if @timeout == IDLE_TIME then
-			@items[@selected].value -= 1
-			@timeout = 0
-			@sound.play(false)
+		unless @items[@selected].value.nil?
+			if @timeout == IDLE_TIME then
+				@items[@selected].value -= 1
+				@timeout = 0
+				@sound.play(false)
+			end
 		end
 	end
 
@@ -59,21 +61,25 @@ class Menu
 		end
 	end
 
+	def select
+		@items[@selected].select
+	end
+
 	def draw(window)
-		selectedColor = Color.new(255,0,0,100)
-		backgroundColor = Color.new(255,80,80,80)
+		selected_color = Color.new(255,0,0,100)
+		background_color = Color.new(255,80,80,80)
 		window.draw_quad(@x - @padding,
 										 @y - @padding,
-										 backgroundColor,
+										 background_color,
 										 @x + @padding + @max_length * @font.height,
 										 @y - @padding,
-										 backgroundColor,
+										 background_color,
 										 @x - @padding,
 										 @y + (@items.length + 1) * @font.height + @padding,
-										 backgroundColor,
+										 background_color,
 										 @x + @padding + @max_length * @font.height,
 										 @y + (@items.length+1)*@font.height + @padding,
-										 backgroundColor)
+										 background_color)
 		@font.draw(@title, @x, @y, 1.0, 1.0, 1.0)
 		@items.map{ |item| item.draw(window,@x,@y,@font,@max_length,@selected) }
 	end

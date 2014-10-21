@@ -1,10 +1,11 @@
 class ScrollingText
 
-	def initialize(window,x,text_path,font_size)
+	def initialize(window,x,text,font,sound,&action)
 		@x = x
-		@text_path = text_path
-		@font_size = font_size
-		@font = Gosu::Font.new(window, "../media/fonts/press-start-2p.ttf", @font_size)
+		@text = text
+		@font = font
+		@action = action
+		@sound = sound
 	end
 
 	def reset
@@ -15,9 +16,14 @@ class ScrollingText
 		@y -= 1
 	end
 
+	def select
+		@sound.play(false)
+		@action.call unless @action.nil?
+	end
+
 	def draw(window)
-		File.readlines(@text_path).map.with_index do |line,i| 
-			@font.draw(line.chomp, @x, @y + @font_size * i, 1.0, 1.0, 1.0) 
+		@text.map.with_index do |line,i| 
+			@font.draw(line.chomp, @x, @y + @font.height * i, 1.0, 1.0, 1.0) 
 		end
 	end
 

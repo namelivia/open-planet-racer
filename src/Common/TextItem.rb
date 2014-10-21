@@ -3,10 +3,12 @@ class TextItem
 	attr_accessor :text
 	attr_accessor :value
 
-	def initialize(text,order,value)
+	def initialize(text,order,value,sound,&action)
 		@text = text
 		@order = order
 		@value = value
+		@action = action
+		@sound = sound
 	end
 
 	def draw(window,x,y,font,max_length,selected)
@@ -32,6 +34,11 @@ class TextItem
 										 y + offset + font.height,
 										 background_color) 
 		font.draw("#{@text} #{@value}",x,y+offset, 1.0, 1.0, 1.0,text_color)
+	end
+
+	def select
+		@sound.play(false) unless @sound.nil?
+		@action.call unless @action.nil?
 	end
 
 end

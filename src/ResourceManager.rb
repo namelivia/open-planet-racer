@@ -9,12 +9,14 @@ class ResourceManager
 	attr_accessor :namelivia
 	attr_accessor :music
 	attr_accessor :rival_portraits
+	attr_accessor :cars
 	attr_accessor :exploding_sound
 	attr_accessor :engine_sound
 	attr_accessor :rocket_sound
 	attr_accessor :crash_sound
 	attr_accessor :front_wheel_sound
 	attr_accessor :back_wheel_sound
+	attr_accessor :credits
 
 	def initialize(window,font_size,fx_volume,music_volume)
 		@font = Gosu::Font.new(window,"../media/fonts/press-start-2p.ttf",font_size)
@@ -27,6 +29,11 @@ class ResourceManager
 		@rival_portraits = [
 			Image.new(window,'../media/gfx/alienPortrait.png',true),
 			Image.new(window,'../media/gfx/alienPortrait2.png',true),
+		]
+		@cars = [
+			Image.new(window,'../media/gfx/car.png',true),
+			Image.new(window,'../media/gfx/car2.png',true),
+			Image.new(window,'../media/gfx/car3.png',true),
 		]
 		@music = [
       #"Ambient Electronic by MaximusPryme274"
@@ -51,5 +58,6 @@ class ResourceManager
 		@crash_sound = SoundFX.new(window,"../media/sfx/crash.ogg",fx_volume)
 		@front_wheel_sound = SoundFX.new(window,"../media/sfx/stomp1.ogg",fx_volume)
 		@back_wheel_sound = SoundFX.new(window,"../media/sfx/stomp2.ogg",fx_volume)
+		@credits = File.readlines('../Credits');
 	end
 end

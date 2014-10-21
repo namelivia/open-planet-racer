@@ -1,5 +1,4 @@
-# Random Name Generator, based in the code of Joshua Smith
-
+# Based in the code of Joshua Smith
 class RandomName
 
 	def self.random_name

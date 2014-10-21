@@ -44,7 +44,8 @@ class Race
 									 true,
 									 resource_manager.engine_sound,
 									 resource_manager.exploding_sound,
-									 resource_manager.rocket_sound)
+									 resource_manager.rocket_sound,
+									 resource_manager.cars.sample)
     rivalInitialPosition = CP::Vec2.new(-80,200)
     @rival = Car.new(window,
 										 @space,
@@ -52,7 +53,8 @@ class Race
 										 false,
 										 resource_manager.engine_sound,
 										 resource_manager.exploding_sound,
-										 resource_manager.rocket_sound)
+										 resource_manager.rocket_sound,
+									   resource_manager.cars.sample)
     @rivalTeleported = false
     @rivalTime = 20+rand(20)
     @rivalName = RandomName.random_name
@@ -79,6 +81,16 @@ class Race
     @pauseMenu.add_item('Resume',nil)
     @pauseMenu.add_item('Exit',nil)
 
+		#Rival sentences
+		sentences = [
+				'Despicable lifeform, you can\'t beat me!',
+				'Your space rubish!',
+				'Prepare to lose!',
+				'There is no way you can win!',
+				'I\'m faster than light',
+				'You are slower than a space snail'
+		]
+		@sentence = sentences.sample
   end
 
   def update(window)
@@ -215,7 +227,7 @@ class Race
       @font.draw("Temperature: #{@temperature} º", 280, 73, 1.0, 1.0, 1.0)
       @font.draw("Rival: #{@rivalName}", 280, 103, 1.0, 1.0, 1.0)
       @font.draw("Time: #{@rivalTime} s", 280, 133, 1.0, 1.0, 1.0)
-      @font.draw("\"Despicable lifeform, you can't beat me!\"", 12, 273, 1.0, 1.0, 1.0)
+      @font.draw(@sentence, 12, 273, 1.0, 1.0, 1.0)
     else
 
     @car.draw(window,@scroll_x,@scroll_y)

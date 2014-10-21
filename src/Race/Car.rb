@@ -10,8 +10,8 @@ class Car
 	attr_accessor :destroyed
 	attr_accessor :life
 
-	def initialize(window,space,initialPosition,direction,engine_sound,exploding_sound,rocket_sound)
-
+	def
+		initialize(window,space,initialPosition,direction,engine_sound,exploding_sound,rocket_sound,chasis_image)
 		@direction = direction
 		@maxSpeed = 3.0
 		@maxSpeedBackwards = 1.2
@@ -31,7 +31,7 @@ class Car
 		@rocketSFX = rocket_sound
 		@rocketSFX.play(true)
 		@rocketSFX.setVolume(0)
-		@chasis = create_chasis(window,space,initialPosition,@direction)
+		@chasis = create_chasis(window,space,initialPosition,@direction,chasis_image)
 		@wheel = create_wheel(window,space,initialPosition,@direction)
 		@bigWheel = create_bigWheel(window,space,initialPosition,@direction)
 		image = *Image.load_tiles(window,"../media/gfx/afterburner.png",19,42,true)
@@ -193,7 +193,7 @@ class Car
 		@position = @chasis.body.p
 	end
 
-	def create_chasis(window,space,initialPosition,direction)
+	def create_chasis(window,space,initialPosition,direction,chasis_image)
 		if direction then
 			chasis_vertices = [
 				CP::Vec2.new(-22, -22),
@@ -206,7 +206,6 @@ class Car
 				CP::Vec2.new(21, -9),
 				CP::Vec2.new(12, -18),
 				CP::Vec2.new(0,-22)]
-			chasis_image = Image.new(window,"../media/gfx/car.png",true)
 		else
 			chasis_vertices = [
 				CP::Vec2.new(0,-22),
@@ -219,7 +218,6 @@ class Car
 				CP::Vec2.new(31, -15),
 				CP::Vec2.new(25, -21),
 				CP::Vec2.new(22, -22)]
-			chasis_image = Image.new(window,"../media/gfx/RivalCar.png",true)
 		end
 		body = CP::Body.new(1, CP::moment_for_poly(10.0, chasis_vertices, CP::Vec2.new(0, 0)))
 		body.p = initialPosition

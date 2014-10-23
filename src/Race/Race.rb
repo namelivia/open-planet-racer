@@ -78,8 +78,8 @@ class Race
    
     #Pause Menu 
     @pauseMenu = Menu.new(window,100,200,'Paused',resource_manager.font,resource_manager.cursor_sound)   
-    @pauseMenu.add_item('Resume',nil)
-    @pauseMenu.add_item('Exit',nil)
+    @pauseMenu.add_item('Resume',nil){}
+    @pauseMenu.add_item('Exit',nil){}
 
 		#Rival sentences
 		sentences = [

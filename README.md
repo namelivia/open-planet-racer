@@ -1,7 +1,6 @@
 open-planet-racer
 =================
 
-![Title image](http://i58.tinypic.com/30j42nc.png)<br />
 Car races on another planets
 <h2>Requirements</h2>
 <h3>System packages:</h3>
